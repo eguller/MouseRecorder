@@ -1,4 +1,4 @@
-package MouseRecorder;
+package com.eguller.mouserecorder;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

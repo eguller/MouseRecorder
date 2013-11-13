@@ -1,10 +1,10 @@
-package MouseRecorder;
+package com.eguller.mouserecorder;
 
 /**
  * Hello world!
  *
  */
-public class App 
+public class MouseRecorder
 {
     public static void main( String[] args )
     {
