@@ -14,14 +14,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-    <repositories>
-        <repository>
-            <id>ProjectRepo</id>
-            <name>ProjectRepo</name>
-            <url>file://${project.basedir}/src/local-libs</url>
-        </repository>
-    </repositories>
-
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -32,7 +24,9 @@
       <dependency>
           <groupId>org.jnativehook</groupId>
           <artifactId>jnativehook</artifactId>
+          <scope>system</scope>
           <version>1.1.4</version>
+          <systemPath>${project.basedir}/src/local-libs/org/jnativehook/jnativehook/1.1.4/jnativehook-1.1.4.jar</systemPath>
       </dependency>
   </dependencies>
 </project>
