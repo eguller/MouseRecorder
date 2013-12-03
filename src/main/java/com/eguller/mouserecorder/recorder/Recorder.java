@@ -84,12 +84,12 @@ public class Recorder implements NativeMouseMotionListener, NativeKeyListener, N
 
     @Override
     public void nativeMouseDragged(NativeMouseEvent nativeMouseEvent) {
-
+          System.err.println("Unhandled event: " + nativeMouseEvent);
     }
 
     @Override
     public void nativeMouseClicked(NativeMouseEvent nativeMouseEvent) {
-
+        System.err.println("Unhandled event: " + nativeMouseEvent);
     }
 
     @Override

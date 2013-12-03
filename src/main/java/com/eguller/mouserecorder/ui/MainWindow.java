@@ -2,16 +2,14 @@ package com.eguller.mouserecorder.ui;
 
 import com.eguller.mouserecorder.recorder.Player;
 import com.eguller.mouserecorder.recorder.Recorder;
+import com.eguller.mouserecorder.ui.state.ButtonStates;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
@@ -25,6 +23,7 @@ public class MainWindow extends JFrame implements Observer {
     JMenuBar menuBar;
     JButton playButton;
     JButton recordButton;
+    JButton stopButton;
 
 
 
@@ -55,12 +54,15 @@ public class MainWindow extends JFrame implements Observer {
         loadImages();
         playButton = new JButton(new ImageIcon(startImage));
         playButton.setEnabled(false);
-        playButton.setName("Play");
         playButton.addActionListener(new PlayAction());
 
         recordButton = new JButton(new ImageIcon(recordImage));
-        recordButton.setName(RecordButtonState.RECORD.toString());
         recordButton.addActionListener(new RecordAction());
+
+        stopButton = new JButton(new ImageIcon(stopImage));
+        stopButton.addActionListener(new StopAction());
+        stopButton.setEnabled(false);
+
 
         menuBar = new JMenuBar();
         fileMenu = new JMenu("File");
@@ -80,14 +82,18 @@ public class MainWindow extends JFrame implements Observer {
         menuBar.add(fileMenu);
         menuBar.add(aboutMenu);
 
-        statusBar  = new JLabel("Click red button to start recording.");
+        statusBar = new JLabel();
         statusBar.setFont(statusBar.getFont().deriveFont(10.0f));
         statusBar.setHorizontalAlignment(SwingConstants.RIGHT);
 
         buttonPanel = new JPanel();
         buttonPanel.add(playButton, BorderLayout.WEST);
+        buttonPanel.add(stopButton, BorderLayout.CENTER);
         buttonPanel.add(recordButton, BorderLayout.EAST);
-        buttonPanel.setBorder(new EmptyBorder(3,10,3,10));
+
+        buttonPanel.setBorder(new EmptyBorder(3, 10, 3, 10));
+
+        ButtonStates.PRERECORD.apply(this);
 
         container.add(menuBar, BorderLayout.PAGE_START);
         container.add(buttonPanel, BorderLayout.CENTER);
@@ -110,10 +116,7 @@ public class MainWindow extends JFrame implements Observer {
 
     @Override
     public void update(Observable observable, Object o) {
-        statusBar.setText("Click blue to replay/ red to record");
-        playButton.setEnabled(true);
-        recordButton.setEnabled(true);
-        recordButton.setName(RecordButtonState.POSTREPLAY.toString());
+        ButtonStates.POSTPLAY.apply(MainWindow.this);
 
     }
 
@@ -123,38 +126,16 @@ public class MainWindow extends JFrame implements Observer {
     public class RecordAction implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
-            JButton recordButton = (JButton)actionEvent.getSource();
-            //if button at record state switch to stop state
-            if(recordButton.getName().equals(RecordButtonState.RECORD.toString())){
-                playButton.setEnabled(false);
-                recordButton.setIcon(new ImageIcon(stopImage));
-                recordButton.setName(RecordButtonState.STOP.toString());
-                statusBar.setText("Click green button to stop recording...");
+                ButtonStates.RECORDING.apply(MainWindow.this);
                 Recorder.start();
             }
-            //if button and stop state switch to record state
-            else if(recordButton.getName().equals(RecordButtonState.STOP.toString())){
-                Recorder.stop();
-                playButton.setEnabled(true);
-                recordButton.setIcon(new ImageIcon(recordImage));
-                recordButton.setName(RecordButtonState.RECORD.toString());
-                statusBar.setText("Click red button to start recording");
-
-            }
-            //This state is introduced to prevent endless record loop.
-            else if(recordButton.getName().equals(RecordButtonState.POSTREPLAY.toString())){
-                playButton.setName(RecordButtonState.RECORD.toString());
-            }
-        }
     }
 
     public class PlayAction implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                recordButton.setEnabled(false);
-                playButton.setEnabled(false);
+                ButtonStates.PLAYING.apply(MainWindow.this);
                 Player player = new Player(Recorder.getRecordedEvents());
                 player.addObserver(MainWindow.this);
                 SwingUtilities.invokeLater(player);
@@ -163,4 +144,30 @@ public class MainWindow extends JFrame implements Observer {
             }
         }
     }
+
+    public class StopAction implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            ButtonStates.POSTRECORD.apply(MainWindow.this);
+            Recorder.stop();
+
+        }
+    }
+
+    public JButton getStopButton(){
+        return stopButton;
+    }
+
+    public JButton getPlayButton(){
+        return playButton;
+    }
+
+    public JButton getRecordButton(){
+        return recordButton;
+    }
+
+    public JLabel getStatusBar(){
+        return statusBar;
+    }
+
 }
