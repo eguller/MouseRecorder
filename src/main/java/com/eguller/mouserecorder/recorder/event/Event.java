@@ -19,4 +19,5 @@ public abstract class Event {
     public long getWhen(){
         return when;
     }
+
 }

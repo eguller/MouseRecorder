@@ -65,6 +65,7 @@ public class Recorder implements NativeMouseMotionListener, NativeKeyListener, N
     @Override
     public void nativeKeyPressed(NativeKeyEvent nativeKeyEvent) {
         inputEventList.add(new KeyPressedEvent(nativeKeyEvent.getKeyCode()));
+        System.out.println("Key pressed: " + nativeKeyEvent.getKeyCode());
     }
 
     @Override
@@ -75,7 +76,7 @@ public class Recorder implements NativeMouseMotionListener, NativeKeyListener, N
     @Override
     public void nativeKeyTyped(NativeKeyEvent nativeKeyEvent) {
         //inputEventList.add(nativeKeyEvent);
-        System.out.println("key typed");
+        //System.out.println("key typed");
     }
 
     @Override
@@ -87,7 +88,7 @@ public class Recorder implements NativeMouseMotionListener, NativeKeyListener, N
     @Override
     public void nativeMouseDragged(NativeMouseEvent nativeMouseEvent) {
         //System.err.println("Unhandled event: " + nativeMouseEvent);
-        //System.out.println("Mouse Dragged - button: " + nativeMouseEvent.getButton() + " modifier: " + nativeMouseEvent.getModifiers());
+        System.out.println("Mouse Dragged - button: " + nativeMouseEvent.getButton() + " modifier: " + nativeMouseEvent.getModifiers());
         //inputEventList.add(new MouseClickEvent(nativeMouseEvent.getButton()));
         inputEventList.add(new MouseMoveEvent(nativeMouseEvent.getX(), nativeMouseEvent.getY()));
     }
@@ -95,7 +96,7 @@ public class Recorder implements NativeMouseMotionListener, NativeKeyListener, N
     @Override
     public void nativeMouseClicked(NativeMouseEvent nativeMouseEvent) {
         //System.err.println("Unhandled event: " + nativeMouseEvent);
-        //System.out.println("Mouse Clicked - button: " + nativeMouseEvent.getButton() + " modifier: " + nativeMouseEvent.getModifiers());
+        System.out.println("Mouse Clicked - button: " + nativeMouseEvent.getButton() + " modifier: " + nativeMouseEvent.getModifiers());
         //System.out.println("mask: " + MouseEvent.BUTTON1_DOWN_MASK);
         //inputEventList.add(new MouseClickEvent(nativeMouseEvent.getButton()));
 
@@ -111,7 +112,7 @@ public class Recorder implements NativeMouseMotionListener, NativeKeyListener, N
     @Override
     public void nativeMouseReleased(NativeMouseEvent nativeMouseEvent) {
        inputEventList.add(new MouseReleaseEvent(nativeMouseEvent.getButton()));
-       //System.out.println("Mouse Released - button: " + nativeMouseEvent.getButton() + " modifier: " + nativeMouseEvent.getModifiers());
+       System.out.println("Mouse Released - button: " + nativeMouseEvent.getButton() + " modifier: " + nativeMouseEvent.getModifiers());
     }
 
     public boolean isRegistered() {

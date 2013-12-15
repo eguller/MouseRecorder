@@ -1,5 +1,7 @@
 package com.eguller.mouserecorder.recorder.event;
 
+import com.eguller.mouserecorder.util.OS;
+
 /**
  * Created with IntelliJ IDEA.
  * User: eguller
@@ -12,5 +14,15 @@ public abstract class KeyEvent extends Event{
     public KeyEvent(int key){
         super();
         this.key = key;
+        convertMacCommandKey();
+    }
+
+    public void convertMacCommandKey(){
+        if(OS.isMacOSX()){
+            //mac native command key code
+            if(this.key == 16){
+                this.key = java.awt.event.KeyEvent.VK_META;
+            }
+        }
     }
 }

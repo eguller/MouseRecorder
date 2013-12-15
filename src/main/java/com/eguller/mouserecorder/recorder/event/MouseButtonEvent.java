@@ -24,10 +24,10 @@ public abstract class MouseButtonEvent extends Event{
                 ret = InputEvent.BUTTON1_MASK;
                 break;
             case 2:
-                ret = InputEvent.BUTTON2_MASK;
+                ret = InputEvent.BUTTON3_MASK;
                 break;
             case 3:
-                ret = InputEvent.BUTTON3_MASK;
+                ret = InputEvent.BUTTON2_MASK;
                 break;
         }
         return ret;
