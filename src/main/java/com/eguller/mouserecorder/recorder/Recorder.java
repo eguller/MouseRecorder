@@ -46,6 +46,7 @@ public class Recorder implements NativeMouseMotionListener, NativeKeyListener, N
             GlobalScreen.getInstance().addNativeKeyListener(recorder);
             GlobalScreen.getInstance().addNativeMouseListener(recorder);
             GlobalScreen.getInstance().addNativeMouseMotionListener(recorder);
+            GlobalScreen.getInstance().addNativeMouseWheelListener(recorder);
         }
     }
 
@@ -58,6 +59,7 @@ public class Recorder implements NativeMouseMotionListener, NativeKeyListener, N
              GlobalScreen.getInstance().removeNativeKeyListener(recorder);
              GlobalScreen.getInstance().removeNativeMouseListener(recorder);
              GlobalScreen.getInstance().removeNativeMouseMotionListener(recorder);
+             GlobalScreen.getInstance().removeNativeMouseWheelListener(recorder);
              recorder.setRegistered(false);
          }
     }
@@ -134,6 +136,6 @@ public class Recorder implements NativeMouseMotionListener, NativeKeyListener, N
 
     @Override
     public void nativeMouseWheelMoved(NativeMouseWheelEvent nativeMouseWheelEvent) {
-        System.out.println("Mouse Wheel moved - button: " + nativeMouseWheelEvent.getButton() + " modifier: " + nativeMouseWheelEvent.getModifiers());
+        System.out.println("Mouse Wheel moved - button: " + nativeMouseWheelEvent.getButton() + " modifier: " + nativeMouseWheelEvent.getModifiers() + " other: " + nativeMouseWheelEvent.getWheelRotation());
     }
 }
