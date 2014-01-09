@@ -1,0 +1,6 @@
+<project name="mouse-recorder" default="dist" basedir=".">
+    <target name="dist">
+        <delete dir="executable"></delete>
+        <mkdir dir="executable"></mkdir>
+    </target>
+</project>
