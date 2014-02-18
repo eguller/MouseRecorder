@@ -1,0 +1,52 @@
+<project name="mouse-recorder" default="default" basedir="../">
+    <property name="target" value="target"/>
+    <property name="executable.win" value="${target}/Mouse Recorder.exe"/>
+    <property name="executable.mac" value="${target}/Mouse Recorder.app"/>
+    <property name="executable.jar" value="${target}/mouserecorder.jar"/>
+    <property name="main.class" value="com.eguller.mouserecorder.MouseRecorder"/>
+    <target name="default" depends="clean, build, mac, win">
+
+    </target>
+    <target name="os">
+        <condition property="windowsos">
+            <os family="windows"/>
+        </condition>
+
+        <condition property="linuxos">
+            <os family="unix"/>
+        </condition>
+        <condition property="macos">
+            <os family="mac"/>
+        </condition>
+    </target>
+    <target name="win" if="windowsos" depends="os">
+        <echo message="windows">windows os</echo>
+    </target>
+    <target name="mac" if="macos" depends="os">
+        <echo message="mac">mac os</echo>
+    </target>
+    <target name="clean">
+        <echo message="clean task"/>
+        <delete file="${executable.win}"></delete>
+        <delete file="${executable.mac}"></delete>
+        <delete file="${executable.jar}"></delete>
+    </target>
+
+    <target name="build" depends="win, mac">
+        <echo message="${project.jar}"/>
+        <echo message="${jnativehook.jar}"/>
+        <echo message="${jnativehook.absolute}"/>
+        <jar destfile="${executable.jar}">
+            <archives>
+                <zips>
+                    <fileset dir="${jnativehook.dir}" includes="${jnativehook.jar}"/>
+                    <fileset dir="${target}" includes="${project.jar}"/>
+                </zips>
+            </archives>
+            <manifest>
+                <attribute name="Main-Class" value="${main.class}"/>
+            </manifest>
+
+        </jar>
+    </target>
+</project>
