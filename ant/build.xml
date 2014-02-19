@@ -24,6 +24,21 @@
     </target>
     <target name="mac" if="macos" depends="os">
         <echo message="mac">mac os</echo>
+        <mkdir dir="${executable.mac}" />
+        <mkdir dir="${executable.mac}/Contents" />
+        <mkdir dir="${executable.mac}/Contents/MacOS" />
+        <mkdir dir="${executable.mac}/Contents/Resources" />
+        <mkdir dir="${executable.mac}/Contents/Resources/Java" />
+
+        <copy file="${target}/classes/mouse-recorder.icns" todir="${executable.mac}/Contents/Resources/" />
+        <copy file="${executable.jar}" todir="${executable.mac}/Contents/Resources/Java" />
+        <copy file="mac-resources/JavaApplicationStub" todir="${executable.mac}/Contents/MacOS/" />
+        <exec executable="chmod">
+            <arg value="+x"/>
+            <arg value="${executable.mac}/Contents/MacOS/JavaApplicationStub"/>
+        </exec>
+        <copy file="mac-resources/Info.plist" todir="${executable.mac}/Contents/" />
+        <copy file="mac-resources/PkgInfo" todir="${executable.mac}/Contents/" />
     </target>
     <target name="clean">
         <echo message="clean task"/>
@@ -32,7 +47,7 @@
         <delete file="${executable.jar}"></delete>
     </target>
 
-    <target name="build" depends="win, mac">
+    <target name="build">
         <echo message="${project.jar}"/>
         <echo message="${jnativehook.jar}"/>
         <echo message="${jnativehook.absolute}"/>
