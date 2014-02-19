@@ -35,6 +35,12 @@
             <version>1.1.4</version>
             <systemPath>${jnativehook.absolute}</systemPath>
         </dependency>
+        <dependency>
+            <groupId>com.akathist.maven.plugins.launch4j</groupId>
+            <artifactId>launch4j-maven-plugin</artifactId>
+            <version>1.5.2</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -57,6 +63,41 @@
                         <goals>
                             <goal>run</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>l4j-gui</id>
+                        <phase>package</phase>
+                        <goals><goal>launch4j</goal></goals>
+                        <configuration>
+                            <headerType>gui</headerType>
+                            <outfile>target/Mouse Recorder.exe</outfile>
+                            <jar>target/mouserecorder.jar</jar>
+                            <errTitle>Mouse Recorder - Launch Error</errTitle>
+                            <icon>${project.basedir}/src/main/resources/mouse-recorder.ico</icon>
+                            <classPath>
+                                <mainClass>com.eguller.mouserecorder.MouseRecorder</mainClass>
+                            </classPath>
+                            <jre>
+                                <minVersion>1.6.0</minVersion>
+                            </jre>
+                            <versionInfo>
+                                <fileVersion>1.0.0.0</fileVersion>
+                                <txtFileVersion>${project.version}</txtFileVersion>
+                                <fileDescription>Mouse Recorder</fileDescription>
+                                <copyright>eguller 2014</copyright>
+                                <productVersion>1.0.0.0</productVersion>
+                                <txtProductVersion>${project.version}</txtProductVersion>
+                                <productName>Mouse Recorder</productName>
+                                <internalName>MouseRecorder</internalName>
+                                <originalFilename>Mouse Recorder.exe</originalFilename>
+                            </versionInfo>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
