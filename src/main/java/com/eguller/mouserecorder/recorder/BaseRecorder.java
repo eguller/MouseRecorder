@@ -1,14 +1,13 @@
 package com.eguller.mouserecorder.recorder;
 
+import com.eguller.mouserecorder.recorder.api.Recorder;
 import com.eguller.mouserecorder.recorder.event.*;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
-import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 import org.jnativehook.mouse.*;
 
-import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,60 +18,72 @@ import java.util.List;
  *
  * Record mouse and keyboard actions.
  */
-public class Recorder implements NativeMouseMotionListener, NativeKeyListener, NativeMouseListener, NativeMouseWheelListener {
+public class BaseRecorder implements NativeMouseMotionListener, NativeKeyListener, NativeMouseListener, NativeMouseWheelListener, Recorder {
 
 
-    boolean registered = false;
-    private static final Recorder recorder = new Recorder();
-    private static List<Event> inputEventList = new LinkedList<Event>();
+    Record record = new Record();
+    //private static List<Event> inputEventList = new LinkedList<Event>();
 
-    private Recorder(){}
+    public BaseRecorder(){
+
+    }
+
+    public void record(){
+        registerNativeHook();
+        record = new Record();
+    }
+
+    public Record stop(){
+        deRegisterNativeHook();
+        return record;
+    }
+
+    @Override
+    public Record getRecord() {
+        return record;
+    }
 
     /**
-     * Register native hook and start capturing
+     * Register native hook and registerNativeHook capturing
      */
-    public static void start() {
-        if (!recorder.isRegistered()) {
+    public void registerNativeHook() {
             try {
-                inputEventList = new LinkedList<Event>();
                 GlobalScreen.registerNativeHook();
-                recorder.setRegistered(true);
             } catch (NativeHookException ex) {
                 System.err.println("There was a problem registering the native hook.");
                 System.err.println(ex.getMessage());
             }
 
             //Construct the example object and initialze native hook.
-            GlobalScreen.getInstance().addNativeKeyListener(recorder);
-            GlobalScreen.getInstance().addNativeMouseListener(recorder);
-            GlobalScreen.getInstance().addNativeMouseMotionListener(recorder);
-            GlobalScreen.getInstance().addNativeMouseWheelListener(recorder);
-        }
+            GlobalScreen.getInstance().addNativeKeyListener(this);
+            GlobalScreen.getInstance().addNativeMouseListener(this);
+            GlobalScreen.getInstance().addNativeMouseMotionListener(this);
+            GlobalScreen.getInstance().addNativeMouseWheelListener(this);
+
     }
 
+
+
     /**
-     * De-register native hook and stop capturing
+     * De-register native hook and deRegisterNativeHook capturing
      */
-    public static  void stop(){
-         if(recorder.isRegistered()){
+    public void deRegisterNativeHook(){
              GlobalScreen.unregisterNativeHook();
-             GlobalScreen.getInstance().removeNativeKeyListener(recorder);
-             GlobalScreen.getInstance().removeNativeMouseListener(recorder);
-             GlobalScreen.getInstance().removeNativeMouseMotionListener(recorder);
-             GlobalScreen.getInstance().removeNativeMouseWheelListener(recorder);
-             recorder.setRegistered(false);
-         }
+             GlobalScreen.getInstance().removeNativeKeyListener(this);
+             GlobalScreen.getInstance().removeNativeMouseListener(this);
+             GlobalScreen.getInstance().removeNativeMouseMotionListener(this);
+             GlobalScreen.getInstance().removeNativeMouseWheelListener(this);
     }
 
     @Override
     public void nativeKeyPressed(NativeKeyEvent nativeKeyEvent) {
-        inputEventList.add(new KeyPressedEvent(nativeKeyEvent.getKeyCode()));
+        record.addEvent(new KeyPressedEvent(nativeKeyEvent.getKeyCode()));
         System.out.println("Key pressed: " + nativeKeyEvent.getKeyCode());
     }
 
     @Override
     public void nativeKeyReleased(NativeKeyEvent nativeKeyEvent) {
-       inputEventList.add(new KeyReleasedEvent(nativeKeyEvent.getKeyCode()));
+       record.addEvent(new KeyReleasedEvent(nativeKeyEvent.getKeyCode()));
     }
 
     @Override
@@ -83,7 +94,7 @@ public class Recorder implements NativeMouseMotionListener, NativeKeyListener, N
 
     @Override
     public void nativeMouseMoved(NativeMouseEvent nativeMouseEvent) {
-        inputEventList.add(new MouseMoveEvent(nativeMouseEvent.getX(), nativeMouseEvent.getY()));
+        record.addEvent(new MouseMoveEvent(nativeMouseEvent.getX(), nativeMouseEvent.getY()));
         //System.out.println("Mouse Moved - button: " + nativeMouseEvent.getButton() + " modifier: " + nativeMouseEvent.getModifiers());
     }
 
@@ -92,7 +103,7 @@ public class Recorder implements NativeMouseMotionListener, NativeKeyListener, N
         //System.err.println("Unhandled event: " + nativeMouseEvent);
         System.out.println("Mouse Dragged - button: " + nativeMouseEvent.getButton() + " modifier: " + nativeMouseEvent.getModifiers());
         //inputEventList.add(new MouseClickEvent(nativeMouseEvent.getButton()));
-        inputEventList.add(new MouseMoveEvent(nativeMouseEvent.getX(), nativeMouseEvent.getY()));
+        record.addEvent(new MouseMoveEvent(nativeMouseEvent.getX(), nativeMouseEvent.getY()));
     }
 
     @Override
@@ -108,31 +119,14 @@ public class Recorder implements NativeMouseMotionListener, NativeKeyListener, N
     public void nativeMousePressed(NativeMouseEvent nativeMouseEvent) {
         //inputEventList.add(nativeMouseEvent);
         System.out.println("Mouse Pressed - button: " + nativeMouseEvent.getButton() + " modifier: " + nativeMouseEvent.getModifiers());
-        inputEventList.add(new MouseClickEvent(nativeMouseEvent.getButton()));
+        record.addEvent(new MouseClickEvent(nativeMouseEvent.getButton()));
     }
 
     @Override
     public void nativeMouseReleased(NativeMouseEvent nativeMouseEvent) {
-       inputEventList.add(new MouseReleaseEvent(nativeMouseEvent.getButton()));
+       record.addEvent(new MouseReleaseEvent(nativeMouseEvent.getButton()));
        System.out.println("Mouse Released - button: " + nativeMouseEvent.getButton() + " modifier: " + nativeMouseEvent.getModifiers());
     }
-
-    public boolean isRegistered() {
-        return registered;
-    }
-
-    public void setRegistered(boolean registered) {
-        this.registered = registered;
-    }
-
-    /**
-     * Get list of recorded events
-     * @return - List of recorded events
-     */
-    public static List<Event> getRecordedEvents(){
-        return inputEventList;
-    }
-
 
     @Override
     public void nativeMouseWheelMoved(NativeMouseWheelEvent nativeMouseWheelEvent) {

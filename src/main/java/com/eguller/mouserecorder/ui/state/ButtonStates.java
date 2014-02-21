@@ -17,7 +17,7 @@ public enum ButtonStates implements Apply {
             mainWindow.getPlayButton().setEnabled(false);
             mainWindow.getRecordButton().setEnabled(true);
             mainWindow.getStopButton().setEnabled(false);
-            mainWindow.getStatusBar().setText("Click red button to start recording.");
+            mainWindow.getStatusBar().setText("Click red button to registerNativeHook recording.");
         }
     },
     RECORDING {
@@ -25,7 +25,7 @@ public enum ButtonStates implements Apply {
             mainWindow.getStopButton().setEnabled(true);
             mainWindow.getRecordButton().setEnabled(false);
             mainWindow.getPlayButton().setEnabled(false);
-            mainWindow.getStatusBar().setText("Click green button to stop recording.");
+            mainWindow.getStatusBar().setText("Click green button to deRegisterNativeHook recording.");
         }
     }
 

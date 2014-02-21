@@ -1,7 +1,9 @@
 package com.eguller.mouserecorder.ui;
 
-import com.eguller.mouserecorder.recorder.Player;
-import com.eguller.mouserecorder.recorder.Recorder;
+import com.eguller.mouserecorder.player.PlayerImpl;
+import com.eguller.mouserecorder.player.api.Player;
+import com.eguller.mouserecorder.recorder.BaseRecorder;
+import com.eguller.mouserecorder.recorder.api.Recorder;
 import com.eguller.mouserecorder.ui.state.ButtonStates;
 
 import javax.imageio.ImageIO;
@@ -26,7 +28,6 @@ public class MainWindow extends JFrame implements Observer {
     JButton stopButton;
 
 
-
     JMenu fileMenu;
     JMenuItem saveItem;
     JMenuItem openItem;
@@ -45,12 +46,18 @@ public class MainWindow extends JFrame implements Observer {
 
     JPanel buttonPanel;
 
-    public MainWindow(){
+    Recorder recorder;
+    Player player;
+
+    public MainWindow(Recorder recorder, Player player) {
         addComponentstoPane(getContentPane());
         this.setResizable(false);
+        this.recorder = recorder;
+        this.player = player;
+        player.addObserver(this);
     }
 
-    private  void addComponentstoPane(Container container){
+    private void addComponentstoPane(Container container) {
         loadImages();
         playButton = new JButton(new ImageIcon(startImage));
         playButton.setEnabled(false);
@@ -100,10 +107,10 @@ public class MainWindow extends JFrame implements Observer {
         container.add(statusBar, BorderLayout.PAGE_END);
         setResizable(false);
         setSize(512, 512);
-        setTitle("Mouse Recorder");
+        setTitle("Mouse BaseRecorder");
     }
 
-    public void loadImages(){
+    public void loadImages() {
         try {
             startImage = ImageIO.read(getClass().getResourceAsStream("/start.png"));
             recordImage = ImageIO.read(getClass().getResourceAsStream("/record.png"));
@@ -123,25 +130,20 @@ public class MainWindow extends JFrame implements Observer {
     /**
      * Record button action listener.
      */
-    public class RecordAction implements ActionListener{
+    public class RecordAction implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
-                ButtonStates.RECORDING.apply(MainWindow.this);
-                Recorder.start();
-            }
+            ButtonStates.RECORDING.apply(MainWindow.this);
+            recorder.record();
+        }
     }
 
     public class PlayAction implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
-            try {
-                ButtonStates.PLAYING.apply(MainWindow.this);
-                Player player = new Player(Recorder.getRecordedEvents());
-                player.addObserver(MainWindow.this);
-                SwingUtilities.invokeLater(player);
-            } catch (AWTException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
+            ButtonStates.PLAYING.apply(MainWindow.this);
+            player.play(recorder.getRecord());
+
         }
     }
 
@@ -149,24 +151,23 @@ public class MainWindow extends JFrame implements Observer {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             ButtonStates.POSTRECORD.apply(MainWindow.this);
-            Recorder.stop();
-
+            recorder.stop();
         }
     }
 
-    public JButton getStopButton(){
+    public JButton getStopButton() {
         return stopButton;
     }
 
-    public JButton getPlayButton(){
+    public JButton getPlayButton() {
         return playButton;
     }
 
-    public JButton getRecordButton(){
+    public JButton getRecordButton() {
         return recordButton;
     }
 
-    public JLabel getStatusBar(){
+    public JLabel getStatusBar() {
         return statusBar;
     }
 

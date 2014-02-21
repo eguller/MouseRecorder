@@ -1,5 +1,7 @@
-package com.eguller.mouserecorder.recorder;
+package com.eguller.mouserecorder.player;
 
+import com.eguller.mouserecorder.player.api.Player;
+import com.eguller.mouserecorder.recorder.Record;
 import com.eguller.mouserecorder.recorder.event.Event;
 import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
@@ -10,6 +12,9 @@ import java.awt.AWTException;
 import java.awt.event.InputEvent;
 import java.util.List;
 import java.util.Observable;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * User: eguller
@@ -18,33 +23,31 @@ import java.util.Observable;
  * <p/>
  * Replays given set of recorded mouse and keyboard actions
  */
-public class Player extends Observable implements Runnable {
+public class PlayerImpl extends Observable implements Runnable, Player {
     Robot robot;
-    List<Event> eventList;
-
-    public Player(List<Event> eventList) throws AWTException {
-        this.eventList = eventList;
+    Record record;
+    Executor executor = Executors.newSingleThreadExecutor();
+    public PlayerImpl() throws AWTException {
         robot = new Robot();
+    }
+
+    public void play(Record record){
+        this.record = record;
+        executor.execute(this);
     }
 
     @Override
     public void run() {
         long previousEventTime = -1;
-        for (Event event : eventList) {
+        for (Event event : record.getEventList()) {
             //delay between events. This part will be parametrized to replay
             //events slower or faster.
             if (previousEventTime > 0 && event.getWhen() - previousEventTime > 0) {
                 robot.delay((int) (event.getWhen() - previousEventTime));
             }
             previousEventTime = event.getWhen();
-
-            //replay mouse and keyboard events
-            //right click missing
-            //dragging is missing
             event.execute(robot);
-
         }
-
         setChanged();
         notifyObservers();
     }
