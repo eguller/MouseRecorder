@@ -40,12 +40,6 @@ public class PlayerImpl extends Observable implements Runnable, Player {
     public void run() {
         long previousEventTime = -1;
         for (Event event : record.getEventList()) {
-            //delay between events. This part will be parametrized to replay
-            //events slower or faster.
-            if (previousEventTime > 0 && event.getWhen() - previousEventTime > 0) {
-                robot.delay((int) (event.getWhen() - previousEventTime));
-            }
-            previousEventTime = event.getWhen();
             event.execute(robot);
         }
         setChanged();
