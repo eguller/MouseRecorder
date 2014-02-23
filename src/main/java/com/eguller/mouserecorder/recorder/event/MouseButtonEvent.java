@@ -9,7 +9,7 @@ import java.awt.event.InputEvent;
  * Time: 5:43 PM
  * To change this template use File | Settings | File Templates.
  */
-public abstract class MouseButtonEvent extends Event{
+public abstract class MouseButtonEvent implements Event{
     private static boolean pressed = false;
     protected  int button;
     public MouseButtonEvent(int button){

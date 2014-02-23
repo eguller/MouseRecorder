@@ -8,9 +8,6 @@ import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 import org.jnativehook.mouse.*;
 
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  * User: eguller
  * Date: 11/24/13
@@ -77,13 +74,13 @@ public class BaseRecorder implements NativeMouseMotionListener, NativeKeyListene
 
     @Override
     public void nativeKeyPressed(NativeKeyEvent nativeKeyEvent) {
-        record.addEvent(new KeyPressedEvent(nativeKeyEvent.getKeyCode()));
+        record.post(new KeyPressedEvent(nativeKeyEvent.getKeyCode()));
         System.out.println("Key pressed: " + nativeKeyEvent.getKeyCode());
     }
 
     @Override
     public void nativeKeyReleased(NativeKeyEvent nativeKeyEvent) {
-       record.addEvent(new KeyReleasedEvent(nativeKeyEvent.getKeyCode()));
+       record.post(new KeyReleasedEvent(nativeKeyEvent.getKeyCode()));
     }
 
     @Override
@@ -94,7 +91,7 @@ public class BaseRecorder implements NativeMouseMotionListener, NativeKeyListene
 
     @Override
     public void nativeMouseMoved(NativeMouseEvent nativeMouseEvent) {
-        record.addEvent(new MouseMoveEvent(nativeMouseEvent.getX(), nativeMouseEvent.getY()));
+        record.post(new MouseMoveEvent(nativeMouseEvent.getX(), nativeMouseEvent.getY()));
         //System.out.println("Mouse Moved - button: " + nativeMouseEvent.getButton() + " modifier: " + nativeMouseEvent.getModifiers());
     }
 
@@ -103,7 +100,7 @@ public class BaseRecorder implements NativeMouseMotionListener, NativeKeyListene
         //System.err.println("Unhandled event: " + nativeMouseEvent);
         System.out.println("Mouse Dragged - button: " + nativeMouseEvent.getButton() + " modifier: " + nativeMouseEvent.getModifiers());
         //inputEventList.add(new MouseClickEvent(nativeMouseEvent.getButton()));
-        record.addEvent(new MouseMoveEvent(nativeMouseEvent.getX(), nativeMouseEvent.getY()));
+        record.post(new MouseMoveEvent(nativeMouseEvent.getX(), nativeMouseEvent.getY()));
     }
 
     @Override
@@ -119,12 +116,12 @@ public class BaseRecorder implements NativeMouseMotionListener, NativeKeyListene
     public void nativeMousePressed(NativeMouseEvent nativeMouseEvent) {
         //inputEventList.add(nativeMouseEvent);
         System.out.println("Mouse Pressed - button: " + nativeMouseEvent.getButton() + " modifier: " + nativeMouseEvent.getModifiers());
-        record.addEvent(new MouseClickEvent(nativeMouseEvent.getButton()));
+        record.post(new MouseClickEvent(nativeMouseEvent.getButton()));
     }
 
     @Override
     public void nativeMouseReleased(NativeMouseEvent nativeMouseEvent) {
-       record.addEvent(new MouseReleaseEvent(nativeMouseEvent.getButton()));
+       record.post(new MouseReleaseEvent(nativeMouseEvent.getButton()));
        System.out.println("Mouse Released - button: " + nativeMouseEvent.getButton() + " modifier: " + nativeMouseEvent.getModifiers());
     }
 

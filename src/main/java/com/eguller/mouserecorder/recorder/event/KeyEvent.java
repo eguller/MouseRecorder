@@ -9,7 +9,7 @@ import com.eguller.mouserecorder.util.OS;
  * Time: 5:48 PM
  * To change this template use File | Settings | File Templates.
  */
-public abstract class KeyEvent extends Event{
+public abstract class KeyEvent implements Event{
     protected int key;
     public KeyEvent(int key){
         super();

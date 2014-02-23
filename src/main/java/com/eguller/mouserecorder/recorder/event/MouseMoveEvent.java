@@ -9,7 +9,7 @@ import java.awt.*;
  * Time: 5:45 PM
  * To change this template use File | Settings | File Templates.
  */
-public class MouseMoveEvent extends Event{
+public class MouseMoveEvent implements Event{
     private int x;
     private int y;
     public MouseMoveEvent(int x, int y){

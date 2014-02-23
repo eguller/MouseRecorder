@@ -4,6 +4,7 @@ import com.eguller.mouserecorder.player.PlayerImpl;
 import com.eguller.mouserecorder.player.api.Player;
 import com.eguller.mouserecorder.recorder.BaseRecorder;
 import com.eguller.mouserecorder.recorder.api.Recorder;
+import com.eguller.mouserecorder.ui.action.ExitAction;
 import com.eguller.mouserecorder.ui.state.ButtonStates;
 
 import javax.imageio.ImageIO;
@@ -77,6 +78,8 @@ public class MainWindow extends JFrame implements Observer {
         openItem = new JMenuItem("Open");
         separator = new JSeparator();
         exitItem = new JMenuItem("Exit");
+
+
         fileMenu.add(saveItem);
         fileMenu.add(openItem);
         fileMenu.add(separator);
@@ -108,6 +111,12 @@ public class MainWindow extends JFrame implements Observer {
         setResizable(false);
         setSize(512, 512);
         setTitle("Mouse BaseRecorder");
+
+        addActionListeners();
+    }
+
+    public void addActionListeners(){
+        exitItem.addActionListener(new ExitAction());
     }
 
     public void loadImages() {

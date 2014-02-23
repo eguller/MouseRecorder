@@ -9,15 +9,6 @@ import java.awt.*;
  * Time: 5:39 PM
  * To change this template use File | Settings | File Templates.
  */
-public abstract class Event {
-    long when;
-    public Event(){
-        when = System.currentTimeMillis();
-    }
-    public abstract void execute(Robot robot);
-
-    public long getWhen(){
-        return when;
-    }
-
+public interface  Event {
+    public void execute(Robot robot);
 }
