@@ -1,22 +1,22 @@
 package com.eguller.mouserecorder.recorder.event;
 
 import java.awt.*;
-import java.awt.event.InputEvent;
 
 /**
  * Created with IntelliJ IDEA.
  * User: eguller
  * Date: 12/4/13
- * Time: 5:37 PM
+ * Time: 5:40 PM
  * To change this template use File | Settings | File Templates.
  */
-public class MouseClickEvent extends MouseButtonEvent{
-    public MouseClickEvent(int button) {
+public class MouseReleasedEvent extends MouseButtonEvent{
+
+    public MouseReleasedEvent(int button) {
         super(button);
     }
 
     @Override
     public void execute(Robot robot) {
-        robot.mousePress(button);
+        robot.mouseRelease(button);
     }
 }

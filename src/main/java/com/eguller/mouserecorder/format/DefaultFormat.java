@@ -4,6 +4,7 @@ import com.eguller.mouserecorder.exceptions.MouseRecorderException;
 import com.eguller.mouserecorder.recorder.Record;
 import com.eguller.mouserecorder.recorder.event.*;
 
+import java.awt.event.*;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,15 +23,15 @@ public class DefaultFormat implements Format {
         convertorFromClass.put(DelayEvent.class, delayConvertor);
         convertorFromClass.put(KeyPressedEvent.class, keyPressedConvertor);
         convertorFromClass.put(KeyReleasedEvent.class, keyReleasedConvertor);
-        convertorFromClass.put(MouseClickEvent.class, mouseClickConvertor);
-        convertorFromClass.put(MouseReleaseEvent.class, mouseReleaseConvertor);
+        convertorFromClass.put(MousePressedEvent.class, mousePressedConvertor);
+        convertorFromClass.put(MouseReleasedEvent.class, mouseReleasedConvertor);
         convertorFromClass.put(MouseMoveEvent.class, mouseMoveConvertor);
 
         convertorFromRegexp.put("delay_event_regexp", delayConvertor);
         convertorFromRegexp.put("key_pressed_event_regexp", keyPressedConvertor);
         convertorFromRegexp.put("key_released_event_regexp", keyReleasedConvertor);
-        convertorFromRegexp.put("mouse_clicked_event_regexp", mouseClickConvertor);
-        convertorFromRegexp.put("mouse_released_event_regexp", mouseReleaseConvertor);
+        convertorFromRegexp.put("mouse_clicked_event_regexp", mousePressedConvertor);
+        convertorFromRegexp.put("mouse_released_event_regexp", mouseReleasedConvertor);
         convertorFromRegexp.put("mouse_moved_event,regexp", mouseMoveConvertor);
     }
 
@@ -90,7 +91,8 @@ public class DefaultFormat implements Format {
     Convertor delayConvertor = new Convertor() {
         @Override
         public String event2String(Event event) {
-            return null;
+            DelayEvent delayEvent = (DelayEvent)event;
+            return String.format("{delay %d}", delayEvent.getDelay());
         }
 
         @Override
@@ -102,7 +104,8 @@ public class DefaultFormat implements Format {
     Convertor keyPressedConvertor = new Convertor() {
         @Override
         public String event2String(Event event) {
-            return null;
+            KeyPressedEvent keyPressedEvent = (KeyPressedEvent)event;
+            return String.format("{%s pressed}", java.awt.event.KeyEvent.getKeyText(keyPressedEvent.getKey()));
         }
 
         @Override
@@ -114,7 +117,8 @@ public class DefaultFormat implements Format {
     Convertor keyReleasedConvertor = new Convertor() {
         @Override
         public String event2String(Event event) {
-            return null;
+            KeyReleasedEvent keyPressedEvent = (KeyReleasedEvent)event;
+            return String.format("{%s released}", java.awt.event.KeyEvent.getKeyText(keyPressedEvent.getKey()));
         }
 
         @Override
@@ -123,10 +127,20 @@ public class DefaultFormat implements Format {
         }
     };
 
-    Convertor mouseClickConvertor = new Convertor() {
+    Convertor mousePressedConvertor = new Convertor() {
         @Override
         public String event2String(Event event) {
-            return null;
+            String str = "";
+            MousePressedEvent mousePressedEvent = (MousePressedEvent)event;
+            int button = mousePressedEvent.getButton();
+            if(button == MouseEvent.BUTTON1_MASK){
+                str = "{lmouse pressed}";
+            } else if(button == MouseEvent.BUTTON2_MASK){
+                str = "{rmouse pressed}";
+            } else if(button == MouseEvent.BUTTON3_MASK){
+                str = "{wheel pressed}";
+            }
+            return str;
         }
 
         @Override
@@ -135,10 +149,20 @@ public class DefaultFormat implements Format {
         }
     };
 
-    Convertor mouseReleaseConvertor = new Convertor() {
+    Convertor mouseReleasedConvertor = new Convertor() {
         @Override
         public String event2String(Event event) {
-            return null;
+            String str = "";
+            MouseReleasedEvent mousePressedEvent = (MouseReleasedEvent)event;
+            int button = mousePressedEvent.getButton();
+            if(button == MouseEvent.BUTTON1_MASK){
+                str = "{lmouse released}";
+            } else if(button == MouseEvent.BUTTON2_MASK){
+                str = "{rmouse released}";
+            } else if(button == MouseEvent.BUTTON3_MASK){
+                str = "{wheel released}";
+            }
+            return str;
         }
 
         @Override

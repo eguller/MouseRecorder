@@ -21,6 +21,10 @@ public class DelayEvent implements Event{
     }
 
 
+    public long getDelay(){
+        return delay;
+    }
+
     @Override
     public void execute(Robot robot) {
         long speedDelay = (long)(delay * speedConfig.getSpeedX());

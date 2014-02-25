@@ -17,6 +17,10 @@ public abstract class KeyEvent implements Event{
         convertMacCommandKey();
     }
 
+    public int getKey(){
+        return key;
+    }
+
     public void convertMacCommandKey(){
         if(OS.isMacOSX()){
             //mac native command key code

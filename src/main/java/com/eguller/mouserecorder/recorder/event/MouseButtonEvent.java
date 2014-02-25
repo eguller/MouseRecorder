@@ -17,6 +17,10 @@ public abstract class MouseButtonEvent implements Event{
         this.button = getMaskForButton(button);
     }
 
+    public int getButton(){
+        return button;
+    }
+
     private static int getMaskForButton(int button){
         int ret = InputEvent.BUTTON1_MASK;
         switch (button){

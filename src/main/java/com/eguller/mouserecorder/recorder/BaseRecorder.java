@@ -99,7 +99,7 @@ public class BaseRecorder implements NativeMouseMotionListener, NativeKeyListene
     public void nativeMouseDragged(NativeMouseEvent nativeMouseEvent) {
         //System.err.println("Unhandled event: " + nativeMouseEvent);
         System.out.println("Mouse Dragged - button: " + nativeMouseEvent.getButton() + " modifier: " + nativeMouseEvent.getModifiers());
-        //inputEventList.add(new MouseClickEvent(nativeMouseEvent.getButton()));
+        //inputEventList.add(new MousePressedEvent(nativeMouseEvent.getButton()));
         record.post(new MouseMoveEvent(nativeMouseEvent.getX(), nativeMouseEvent.getY()));
     }
 
@@ -108,7 +108,8 @@ public class BaseRecorder implements NativeMouseMotionListener, NativeKeyListene
         //System.err.println("Unhandled event: " + nativeMouseEvent);
         System.out.println("Mouse Clicked - button: " + nativeMouseEvent.getButton() + " modifier: " + nativeMouseEvent.getModifiers());
         //System.out.println("mask: " + MouseEvent.BUTTON1_DOWN_MASK);
-        //inputEventList.add(new MouseClickEvent(nativeMouseEvent.getButton()));
+        //inputEventList.add(new MousePressedEvent(nativeMouseEvent.getButton()));
+        //record.post(new MousePressedEvent(nativeMouseEvent.getButton()));
 
     }
 
@@ -116,17 +117,18 @@ public class BaseRecorder implements NativeMouseMotionListener, NativeKeyListene
     public void nativeMousePressed(NativeMouseEvent nativeMouseEvent) {
         //inputEventList.add(nativeMouseEvent);
         System.out.println("Mouse Pressed - button: " + nativeMouseEvent.getButton() + " modifier: " + nativeMouseEvent.getModifiers());
-        record.post(new MouseClickEvent(nativeMouseEvent.getButton()));
+        record.post(new MousePressedEvent(nativeMouseEvent.getButton()));
     }
 
     @Override
     public void nativeMouseReleased(NativeMouseEvent nativeMouseEvent) {
-       record.post(new MouseReleaseEvent(nativeMouseEvent.getButton()));
+       record.post(new MouseReleasedEvent(nativeMouseEvent.getButton()));
        System.out.println("Mouse Released - button: " + nativeMouseEvent.getButton() + " modifier: " + nativeMouseEvent.getModifiers());
     }
 
     @Override
     public void nativeMouseWheelMoved(NativeMouseWheelEvent nativeMouseWheelEvent) {
         System.out.println("Mouse Wheel moved - button: " + nativeMouseWheelEvent.getButton() + " modifier: " + nativeMouseWheelEvent.getModifiers() + " other: " + nativeMouseWheelEvent.getWheelRotation());
+        record.post(new MouseWheelEvent(nativeMouseWheelEvent.getWheelRotation()));
     }
 }
