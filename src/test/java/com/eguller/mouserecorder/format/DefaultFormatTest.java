@@ -77,4 +77,13 @@ public class DefaultFormatTest {
         String expected = "{lmouse released}";
         Assert.assertEquals(str,expected);
     }
+
+    @Test
+    public void mouseMoveEventTest(){
+        MouseMoveEvent mouseMoveEvent = new MouseMoveEvent(350,620);
+        Convertor convertor = defaultFormat.getConvertor(mouseMoveEvent);
+        String str = convertor.event2String(mouseMoveEvent);
+        String expected = "{move (350,620)}";
+        Assert.assertEquals(str, expected);
+    }
 }

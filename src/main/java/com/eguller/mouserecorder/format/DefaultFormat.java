@@ -37,12 +37,14 @@ public class DefaultFormat implements Format {
 
     @Override
     public void save(File file, Record record) {
+        BufferedWriter bw = null;
         try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+            bw = new BufferedWriter(new FileWriter(file));
             for (Event event : record.getEventList()) {
                 Convertor convertor = getConvertor(event);
                 if (convertor != null) {
-                    bw.write(convertor.event2String(event));
+                    String str = convertor.event2String(event);
+                    bw.write(str);
                     bw.write(LINE_SEPERATOR);
 
                 } else {
@@ -50,10 +52,22 @@ public class DefaultFormat implements Format {
                     System.err.println("Convertor not found for class: " + event.getClass());
                 }
             }
+
         } catch (IOException e) {
             throw new MouseRecorderException(String.format("File %s cannot be saved. \n" +
                     "Please check that you have enough disk space or\n" +
                     "Enough permissions to write file.")).popup().immeadiateLog();
+        } finally {
+            if(bw != null){
+                try {
+                    bw.flush();
+                    bw.close();
+                } catch (IOException e) {
+                    //TODO - log here
+                    e.printStackTrace();
+                }
+
+            }
         }
 
     }
@@ -174,7 +188,8 @@ public class DefaultFormat implements Format {
     Convertor mouseMoveConvertor = new Convertor() {
         @Override
         public String event2String(Event event) {
-            return null;
+            MouseMoveEvent mouseMoveEvent = (MouseMoveEvent)event;
+            return String.format("{move (%d, %d)}", mouseMoveEvent.getX(), mouseMoveEvent.getY());
         }
 
         @Override

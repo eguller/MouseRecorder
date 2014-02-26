@@ -21,4 +21,11 @@ public class MouseMoveEvent implements Event{
     public void execute(Robot robot) {
         robot.mouseMove(x,y);
     }
+
+    public int getX(){
+        return x;
+    }
+    public int getY(){
+        return y;
+    }
 }

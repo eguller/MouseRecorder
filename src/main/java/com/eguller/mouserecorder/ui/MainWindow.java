@@ -3,8 +3,10 @@ package com.eguller.mouserecorder.ui;
 import com.eguller.mouserecorder.player.PlayerImpl;
 import com.eguller.mouserecorder.player.api.Player;
 import com.eguller.mouserecorder.recorder.BaseRecorder;
+import com.eguller.mouserecorder.recorder.Record;
 import com.eguller.mouserecorder.recorder.api.Recorder;
 import com.eguller.mouserecorder.ui.action.ExitAction;
+import com.eguller.mouserecorder.ui.action.SaveFileAction;
 import com.eguller.mouserecorder.ui.state.ButtonStates;
 
 import javax.imageio.ImageIO;
@@ -50,6 +52,8 @@ public class MainWindow extends JFrame implements Observer {
     Recorder recorder;
     Player player;
 
+    final JFileChooser fc = new JFileChooser();
+
     public MainWindow(Recorder recorder, Player player) {
         addComponentstoPane(getContentPane());
         this.setResizable(false);
@@ -75,6 +79,7 @@ public class MainWindow extends JFrame implements Observer {
         menuBar = new JMenuBar();
         fileMenu = new JMenu("File");
         saveItem = new JMenuItem("Save");
+        saveItem.addActionListener(new SaveFileAction(this));
         openItem = new JMenuItem("Open");
         separator = new JSeparator();
         exitItem = new JMenuItem("Exit");
@@ -128,6 +133,10 @@ public class MainWindow extends JFrame implements Observer {
             e.printStackTrace();
         }
 
+    }
+
+    public Record getRecord(){
+        return recorder.getRecord();
     }
 
     @Override
