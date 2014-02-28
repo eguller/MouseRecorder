@@ -119,7 +119,7 @@ public class DefaultFormat implements Format {
         @Override
         public String event2String(Event event) {
             KeyPressedEvent keyPressedEvent = (KeyPressedEvent)event;
-            return String.format("{%s pressed}", java.awt.event.KeyEvent.getKeyText(keyPressedEvent.getKey()));
+            return String.format("{%s pressed}", KeyWrapper.codeToKey(keyPressedEvent.getKey()));
         }
 
         @Override
@@ -132,7 +132,7 @@ public class DefaultFormat implements Format {
         @Override
         public String event2String(Event event) {
             KeyReleasedEvent keyPressedEvent = (KeyReleasedEvent)event;
-            return String.format("{%s released}", java.awt.event.KeyEvent.getKeyText(keyPressedEvent.getKey()));
+            return String.format("{%s released}", KeyWrapper.codeToKey(keyPressedEvent.getKey()));
         }
 
         @Override

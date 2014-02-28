@@ -31,12 +31,31 @@ public class DefaultFormatTest {
         Assert.assertEquals(str,expected);
 
     }
+
+    @Test
+    public void keyPressedEventConvertorTest2(){
+        KeyPressedEvent keyEvent = new KeyPressedEvent(KeyEvent.VK_ENTER);
+        Convertor convertor = defaultFormat.getConvertor(keyEvent);
+        String str = convertor.event2String(keyEvent);
+        String expected = "{ENTER pressed}";
+        Assert.assertEquals(str,expected);
+    }
+
     @Test
     public void keyReleasedEventConvertorTest(){
         KeyReleasedEvent keyEvent = new KeyReleasedEvent(KeyEvent.VK_R);
         Convertor convertor = defaultFormat.getConvertor(keyEvent);
         String str = convertor.event2String(keyEvent);
         String expected = "{R released}";
+        Assert.assertEquals(str,expected);
+    }
+
+    @Test
+    public void keyReleasedEventConvertorTest2(){
+        KeyReleasedEvent keyEvent = new KeyReleasedEvent(KeyEvent.VK_ENTER);
+        Convertor convertor = defaultFormat.getConvertor(keyEvent);
+        String str = convertor.event2String(keyEvent);
+        String expected = "{ENTER released}";
         Assert.assertEquals(str,expected);
     }
 
@@ -83,7 +102,7 @@ public class DefaultFormatTest {
         MouseMoveEvent mouseMoveEvent = new MouseMoveEvent(350,620);
         Convertor convertor = defaultFormat.getConvertor(mouseMoveEvent);
         String str = convertor.event2String(mouseMoveEvent);
-        String expected = "{move (350,620)}";
+        String expected = "{move (350, 620)}";
         Assert.assertEquals(str, expected);
     }
 }
