@@ -1,11 +1,12 @@
 package com.eguller.mouserecorder.format;
 
+import com.eguller.mouserecorder.format.api.Convertor;
+import com.eguller.mouserecorder.format.def.DefaultFormat;
 import com.eguller.mouserecorder.recorder.event.*;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 
 /**
  * User: eguller
@@ -104,5 +105,43 @@ public class DefaultFormatTest {
         String str = convertor.event2String(mouseMoveEvent);
         String expected = "{move (350, 620)}";
         Assert.assertEquals(str, expected);
+    }
+
+    @Test
+    public void delayStr2DelayEventTest(){
+        String str  = "  { delay   356 } ";
+        Convertor convertor = defaultFormat.getConvertor(str);
+        Event event = convertor.string2Event(str);
+        Assert.assertEquals(DelayEvent.class, event.getClass());
+        DelayEvent delayEvent  = (DelayEvent)event;
+        Assert.assertEquals(delayEvent.getDelay(), 356);
+        event = convertor.string2Event("{delay 442}");
+        Assert.assertEquals( ((DelayEvent)event).getDelay(), 442);
+    }
+
+    @Test
+    public void keyPressedStr2KeyPressedEventTest(){
+        String str = " {  R pressed   }  ";
+        Convertor convertor = defaultFormat.getConvertor(str);
+        Event event = convertor.string2Event(str);
+        Assert.assertEquals(KeyPressedEvent.class, event.getClass());
+        Assert.assertEquals( ((KeyPressedEvent)event).getKey(), KeyWrapper.keyToCode("R"));
+    }
+
+    @Test
+    public void enterKeyPressedStr2KeyPressedEventTest(){
+        String str = "{ENTER pressed}";
+        Convertor convertor = defaultFormat.getConvertor(str);
+        Event event = convertor.string2Event(str);
+        Assert.assertEquals(KeyPressedEvent.class, event.getClass());
+        Assert.assertEquals( ((KeyPressedEvent)event).getKey(), KeyWrapper.keyToCode("ENTER"));
+    }
+
+    @Test
+    public void lmousePressesIsNotAKeyEventTest(){
+        String str = "{lmouse pressed}";
+        Convertor convertor = defaultFormat.getConvertor(str);
+        Event event = convertor.string2Event(str);
+        Assert.assertEquals(NoneEvent.INSTANCE, event);
     }
 }

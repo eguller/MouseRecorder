@@ -1,4 +1,4 @@
-package com.eguller.mouserecorder.format;
+package com.eguller.mouserecorder.format.api;
 
 import com.eguller.mouserecorder.recorder.event.Event;
 
@@ -7,7 +7,7 @@ import com.eguller.mouserecorder.recorder.event.Event;
  * Date: 2/23/14
  * Time: 2:42 AM
  */
-public interface Convertor {
-   public String event2String(Event event);
+public interface Convertor<T extends Event> {
+   public String event2String(T event);
    public Event string2Event(String str);
 }

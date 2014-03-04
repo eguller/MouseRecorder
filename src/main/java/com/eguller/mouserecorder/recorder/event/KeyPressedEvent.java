@@ -1,5 +1,7 @@
 package com.eguller.mouserecorder.recorder.event;
 
+import com.eguller.mouserecorder.format.KeyWrapper;
+
 import java.awt.*;
 
 /**
@@ -12,6 +14,10 @@ import java.awt.*;
 public class KeyPressedEvent extends KeyEvent{
     public KeyPressedEvent(int key) {
         super(key);
+    }
+
+    public KeyPressedEvent(String key){
+        super(KeyWrapper.keyToCode(key));
     }
 
     @Override

@@ -1,10 +1,10 @@
-package com.eguller.mouserecorder.format;
+package com.eguller.mouserecorder.format.api;
 
+import com.eguller.mouserecorder.format.api.Convertor;
 import com.eguller.mouserecorder.recorder.Record;
 import com.eguller.mouserecorder.recorder.event.Event;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * User: eguller
