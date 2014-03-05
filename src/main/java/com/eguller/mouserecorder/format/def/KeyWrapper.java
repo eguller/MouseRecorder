@@ -1,4 +1,4 @@
-package com.eguller.mouserecorder.format;
+package com.eguller.mouserecorder.format.def;
 
 import java.util.HashMap;
 import java.util.Map;

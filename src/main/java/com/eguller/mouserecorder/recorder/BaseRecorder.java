@@ -1,5 +1,6 @@
 package com.eguller.mouserecorder.recorder;
 
+import com.eguller.mouserecorder.format.def.MouseWrapper;
 import com.eguller.mouserecorder.recorder.api.Recorder;
 import com.eguller.mouserecorder.recorder.event.*;
 import org.jnativehook.GlobalScreen;
@@ -117,12 +118,14 @@ public class BaseRecorder implements NativeMouseMotionListener, NativeKeyListene
     public void nativeMousePressed(NativeMouseEvent nativeMouseEvent) {
         //inputEventList.add(nativeMouseEvent);
         System.out.println("Mouse Pressed - button: " + nativeMouseEvent.getButton() + " modifier: " + nativeMouseEvent.getModifiers());
-        record.post(new MousePressedEvent(nativeMouseEvent.getButton()));
+        int maskCode = MouseWrapper.native2Code(nativeMouseEvent.getButton());
+        record.post(new MousePressedEvent(maskCode));
     }
 
     @Override
     public void nativeMouseReleased(NativeMouseEvent nativeMouseEvent) {
-       record.post(new MouseReleasedEvent(nativeMouseEvent.getButton()));
+       int maskCode = MouseWrapper.native2Code(nativeMouseEvent.getButton());
+       record.post(new MouseReleasedEvent(maskCode));
        System.out.println("Mouse Released - button: " + nativeMouseEvent.getButton() + " modifier: " + nativeMouseEvent.getModifiers());
     }
 

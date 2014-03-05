@@ -1,13 +1,11 @@
 package com.eguller.mouserecorder.format.def;
 
 import com.eguller.mouserecorder.exceptions.MouseRecorderException;
-import com.eguller.mouserecorder.format.KeyWrapper;
 import com.eguller.mouserecorder.format.api.Convertor;
 import com.eguller.mouserecorder.format.api.Format;
 import com.eguller.mouserecorder.recorder.Record;
 import com.eguller.mouserecorder.recorder.event.*;
 
-import java.awt.event.*;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +27,15 @@ public class DefaultFormat implements Format {
     private static final String KEY_PRESSED_PATTERN_STR = "\\s*\\{\\s*(?!(?:lmouse|rmouse|wheel))([a-zA-Z0-9]+)\\s+pressed\\s*}\\s*";
     private static final Pattern KEY_PRESSED_PATTERN  = Pattern.compile(KEY_PRESSED_PATTERN_STR);
 
+    private static final String KEY_RELEASED_PATTERN_STR = "\\s*\\{\\s*(?!(?:lmouse|rmouse|wheel))([a-zA-Z0-9]+)\\s+released\\s*}\\s*";
+    private static final Pattern KEY_RELEASED_PATTERN  = Pattern.compile(KEY_RELEASED_PATTERN_STR);
+
+    private static final String MOUSE_PRESSED_PATTERN_STR = "\\s*\\{\\s*(lmouse|rmouse|wheel)\\s+pressed\\s*}\\s*";
+    private static final Pattern MOUSE_PRESSED_PATTERN =Pattern.compile(MOUSE_PRESSED_PATTERN_STR);
+
+    private static final String MOUSE_RELEASED_PATTERN_STR = "\\s*\\{\\s*(lmouse|rmouse|wheel)\\s+released\\s*}\\s*";
+    private static final Pattern MOUSE_RELEASED_PATTERN =Pattern.compile(MOUSE_RELEASED_PATTERN_STR);
+
     private static final Map<Pattern, Convertor> eventFromMapping = new HashMap<Pattern, Convertor>();
 
     public DefaultFormat() {
@@ -41,6 +48,9 @@ public class DefaultFormat implements Format {
 
         eventFromMapping.put(DELAY_PATTERN, delayConvertor);
         eventFromMapping.put(KEY_PRESSED_PATTERN, keyPressedConvertor);
+        eventFromMapping.put(KEY_RELEASED_PATTERN, keyReleasedConvertor);
+        eventFromMapping.put(MOUSE_PRESSED_PATTERN, mousePressedConvertor);
+        eventFromMapping.put(MOUSE_RELEASED_PATTERN, mouseReleasedConvertor);
     }
 
     @Override
@@ -141,7 +151,7 @@ public class DefaultFormat implements Format {
             Matcher matcher = KEY_PRESSED_PATTERN.matcher(str);
             if(matcher.find()){
                 String key = matcher.group(1);
-                return new KeyPressedEvent(key);
+                return new KeyPressedEvent(KeyWrapper.keyToCode(key));
             }
             return NoneEvent.INSTANCE;
         }
@@ -155,28 +165,30 @@ public class DefaultFormat implements Format {
 
         @Override
         public Event string2Event(String str) {
-            return null;
+            Matcher matcher = KEY_RELEASED_PATTERN.matcher(str);
+            if(matcher.find()){
+                String key = matcher.group(1);
+                return new KeyReleasedEvent(KeyWrapper.keyToCode(key));
+            }
+            return NoneEvent.INSTANCE;
         }
     };
 
     Convertor mousePressedConvertor = new Convertor<MousePressedEvent>() {
         @Override
         public String event2String(MousePressedEvent event) {
-            String str = "";
             int button = event.getButton();
-            if (button == MouseEvent.BUTTON1_MASK) {
-                str = "{lmouse pressed}";
-            } else if (button == MouseEvent.BUTTON2_MASK) {
-                str = "{rmouse pressed}";
-            } else if (button == MouseEvent.BUTTON3_MASK) {
-                str = "{wheel pressed}";
-            }
-            return str;
+            return String.format("{%s pressed}", MouseWrapper.codeToKey(button));
         }
 
         @Override
         public Event string2Event(String str) {
-            return null;
+            Matcher matcher = MOUSE_PRESSED_PATTERN.matcher(str);
+            if(matcher.find()){
+                String key = matcher.group(1);
+                return new MousePressedEvent(MouseWrapper.keyToCode(key));
+            }
+            return NoneEvent.INSTANCE;
         }
     };
 
@@ -186,19 +198,17 @@ public class DefaultFormat implements Format {
             String str = "";
             MouseReleasedEvent mousePressedEvent = (MouseReleasedEvent) event;
             int button = mousePressedEvent.getButton();
-            if (button == MouseEvent.BUTTON1_MASK) {
-                str = "{lmouse released}";
-            } else if (button == MouseEvent.BUTTON2_MASK) {
-                str = "{rmouse released}";
-            } else if (button == MouseEvent.BUTTON3_MASK) {
-                str = "{wheel released}";
-            }
-            return str;
+            return String.format("{%s released}", MouseWrapper.codeToKey(button));
         }
 
         @Override
         public Event string2Event(String str) {
-            return null;
+            Matcher matcher = MOUSE_RELEASED_PATTERN.matcher(str);
+            if(matcher.find()){
+                String key = matcher.group(1);
+                return new MouseReleasedEvent(MouseWrapper.keyToCode(key));
+            }
+            return NoneEvent.INSTANCE;
         }
     };
 
