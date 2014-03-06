@@ -11,4 +11,6 @@ public interface Recorder {
     public void record();
     public Record stop();
     public Record getRecord();
+
+    void setRecord(Record record);
 }

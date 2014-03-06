@@ -1,8 +1,7 @@
 package com.eguller.mouserecorder.ui.action;
 
-import com.eguller.mouserecorder.format.def.DefaultFormat;
 import com.eguller.mouserecorder.format.api.Format;
-import com.eguller.mouserecorder.recorder.Record;
+import com.eguller.mouserecorder.format.def.DefaultFormat;
 import com.eguller.mouserecorder.ui.MainWindow;
 
 import javax.swing.*;
@@ -17,7 +16,6 @@ import java.awt.event.ActionListener;
 public class SaveFileAction implements ActionListener{
     final JFileChooser fc = new JFileChooser();
     MainWindow mainWindow;
-    Record record;
     Format format = new DefaultFormat();
     public SaveFileAction(MainWindow mainWindow){
         this.mainWindow = mainWindow;

@@ -41,6 +41,11 @@ public class BaseRecorder implements NativeMouseMotionListener, NativeKeyListene
         return record;
     }
 
+    @Override
+    public void setRecord(Record record) {
+        this.record = record;
+    }
+
     /**
      * Register native hook and registerNativeHook capturing
      */

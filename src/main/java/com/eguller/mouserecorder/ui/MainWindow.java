@@ -1,11 +1,10 @@
 package com.eguller.mouserecorder.ui;
 
-import com.eguller.mouserecorder.player.PlayerImpl;
 import com.eguller.mouserecorder.player.api.Player;
-import com.eguller.mouserecorder.recorder.BaseRecorder;
 import com.eguller.mouserecorder.recorder.Record;
 import com.eguller.mouserecorder.recorder.api.Recorder;
 import com.eguller.mouserecorder.ui.action.ExitAction;
+import com.eguller.mouserecorder.ui.action.OpenFileAction;
 import com.eguller.mouserecorder.ui.action.SaveFileAction;
 import com.eguller.mouserecorder.ui.state.ButtonStates;
 
@@ -79,7 +78,7 @@ public class MainWindow extends JFrame implements Observer {
         menuBar = new JMenuBar();
         fileMenu = new JMenu("File");
         saveItem = new JMenuItem("Save");
-        saveItem.addActionListener(new SaveFileAction(this));
+
         openItem = new JMenuItem("Open");
         separator = new JSeparator();
         exitItem = new JMenuItem("Exit");
@@ -122,6 +121,9 @@ public class MainWindow extends JFrame implements Observer {
 
     public void addActionListeners(){
         exitItem.addActionListener(new ExitAction());
+        saveItem.addActionListener(new SaveFileAction(this));
+        openItem.addActionListener(new OpenFileAction(this));
+
     }
 
     public void loadImages() {
@@ -137,6 +139,10 @@ public class MainWindow extends JFrame implements Observer {
 
     public Record getRecord(){
         return recorder.getRecord();
+    }
+
+    public void setRecord(Record record) {
+        recorder.setRecord(record);
     }
 
     @Override
