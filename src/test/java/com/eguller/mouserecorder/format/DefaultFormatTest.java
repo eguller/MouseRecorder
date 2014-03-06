@@ -5,10 +5,13 @@ import com.eguller.mouserecorder.format.def.DefaultFormat;
 import com.eguller.mouserecorder.format.def.KeyWrapper;
 import com.eguller.mouserecorder.format.def.MouseWrapper;
 import com.eguller.mouserecorder.recorder.event.*;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.awt.event.KeyEvent;
+import java.util.Random;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * User: eguller
@@ -24,7 +27,7 @@ public class DefaultFormatTest {
         Convertor convertor = defaultFormat.getConvertor(delayEvent);
         String str = convertor.event2String(delayEvent);
         String expected = "{delay 1923}";
-        Assert.assertEquals(str, expected);
+        assertEquals(str, expected);
     }
 
     @Test
@@ -33,7 +36,7 @@ public class DefaultFormatTest {
         Convertor convertor = defaultFormat.getConvertor(keyEvent);
         String str = convertor.event2String(keyEvent);
         String expected = "{R pressed}";
-        Assert.assertEquals(str, expected);
+        assertEquals(str, expected);
 
     }
 
@@ -43,7 +46,7 @@ public class DefaultFormatTest {
         Convertor convertor = defaultFormat.getConvertor(keyEvent);
         String str = convertor.event2String(keyEvent);
         String expected = "{ENTER pressed}";
-        Assert.assertEquals(str, expected);
+        assertEquals(str, expected);
     }
 
     @Test
@@ -52,7 +55,7 @@ public class DefaultFormatTest {
         Convertor convertor = defaultFormat.getConvertor(keyEvent);
         String str = convertor.event2String(keyEvent);
         String expected = "{R released}";
-        Assert.assertEquals(str, expected);
+        assertEquals(str, expected);
     }
 
     @Test
@@ -61,7 +64,7 @@ public class DefaultFormatTest {
         Convertor convertor = defaultFormat.getConvertor(keyEvent);
         String str = convertor.event2String(keyEvent);
         String expected = "{ENTER released}";
-        Assert.assertEquals(str, expected);
+        assertEquals(str, expected);
     }
 
     @Test
@@ -70,7 +73,7 @@ public class DefaultFormatTest {
         Convertor convertor = defaultFormat.getConvertor(mousePressedEvent);
         String str = convertor.event2String(mousePressedEvent);
         String expected = "{lmouse pressed}";
-        Assert.assertEquals(str, expected);
+        assertEquals(str, expected);
     }
 
     @Test
@@ -79,7 +82,7 @@ public class DefaultFormatTest {
         Convertor convertor = defaultFormat.getConvertor(mousePressedEvent);
         String str = convertor.event2String(mousePressedEvent);
         String expected = "{rmouse pressed}";
-        Assert.assertEquals(str, expected);
+        assertEquals(str, expected);
 
     }
 
@@ -89,7 +92,7 @@ public class DefaultFormatTest {
         Convertor convertor = defaultFormat.getConvertor(mousePressedEvent);
         String str = convertor.event2String(mousePressedEvent);
         String expected = "{wheel pressed}";
-        Assert.assertEquals(str, expected);
+        assertEquals(str, expected);
 
     }
 
@@ -99,16 +102,27 @@ public class DefaultFormatTest {
         Convertor convertor = defaultFormat.getConvertor(mouseReleasedEvent);
         String str = convertor.event2String(mouseReleasedEvent);
         String expected = "{lmouse released}";
-        Assert.assertEquals(str, expected);
+        assertEquals(str, expected);
     }
 
     @Test
-    public void mouseMoveEventTest() {
+    public void mouseMoveEventConvertorTest() {
         MouseMoveEvent mouseMoveEvent = new MouseMoveEvent(350, 620);
         Convertor convertor = defaultFormat.getConvertor(mouseMoveEvent);
         String str = convertor.event2String(mouseMoveEvent);
         String expected = "{move (350, 620)}";
-        Assert.assertEquals(str, expected);
+        assertEquals(str, expected);
+    }
+
+    @Test
+    public void mouseWheelEventConvertorTest() {
+        int scrollAmount = -3;
+        MouseWheelEvent mouseWheelEvent = new MouseWheelEvent(scrollAmount);
+        Convertor convertor = defaultFormat.getConvertor(mouseWheelEvent);
+        assertNotNull(convertor);
+        String expected = String.format("{wheel %d}", scrollAmount);
+        String actual = convertor.event2String(mouseWheelEvent);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -116,11 +130,11 @@ public class DefaultFormatTest {
         String str = "  { delay   356 } ";
         Convertor convertor = defaultFormat.getConvertor(str);
         Event event = convertor.string2Event(str);
-        Assert.assertEquals(DelayEvent.class, event.getClass());
+        assertEquals(DelayEvent.class, event.getClass());
         DelayEvent delayEvent = (DelayEvent) event;
-        Assert.assertEquals(delayEvent.getDelay(), 356);
+        assertEquals(delayEvent.getDelay(), 356);
         event = convertor.string2Event("{delay 442}");
-        Assert.assertEquals(((DelayEvent) event).getDelay(), 442);
+        assertEquals(((DelayEvent) event).getDelay(), 442);
     }
 
     @Test
@@ -128,8 +142,8 @@ public class DefaultFormatTest {
         String str = " {  R pressed   }  ";
         Convertor convertor = defaultFormat.getConvertor(str);
         Event event = convertor.string2Event(str);
-        Assert.assertEquals(KeyPressedEvent.class, event.getClass());
-        Assert.assertEquals(((KeyPressedEvent) event).getKey(), KeyWrapper.keyToCode("R"));
+        assertEquals(KeyPressedEvent.class, event.getClass());
+        assertEquals(((KeyPressedEvent) event).getKey(), KeyWrapper.keyToCode("R"));
     }
 
     @Test
@@ -137,8 +151,8 @@ public class DefaultFormatTest {
         String str = "{ENTER pressed}";
         Convertor convertor = defaultFormat.getConvertor(str);
         Event event = convertor.string2Event(str);
-        Assert.assertEquals(KeyPressedEvent.class, event.getClass());
-        Assert.assertEquals(((KeyPressedEvent) event).getKey(), KeyWrapper.keyToCode("ENTER"));
+        assertEquals(KeyPressedEvent.class, event.getClass());
+        assertEquals(((KeyPressedEvent) event).getKey(), KeyWrapper.keyToCode("ENTER"));
     }
 
     @Test
@@ -146,7 +160,7 @@ public class DefaultFormatTest {
         String str = "{lmouse pressed}";
         Convertor convertor = defaultFormat.getConvertor(str);
         Event event = convertor.string2Event(str);
-        Assert.assertEquals(MousePressedEvent.class, event.getClass());
+        assertEquals(MousePressedEvent.class, event.getClass());
     }
 
     @Test
@@ -154,8 +168,8 @@ public class DefaultFormatTest {
         String str = " {  M released   }  ";
         Convertor convertor = defaultFormat.getConvertor(str);
         Event event = convertor.string2Event(str);
-        Assert.assertEquals(KeyReleasedEvent.class, event.getClass());
-        Assert.assertEquals(((KeyReleasedEvent) event).getKey(), KeyWrapper.keyToCode("M"));
+        assertEquals(KeyReleasedEvent.class, event.getClass());
+        assertEquals(((KeyReleasedEvent) event).getKey(), KeyWrapper.keyToCode("M"));
     }
 
     @Test
@@ -163,8 +177,8 @@ public class DefaultFormatTest {
         String str = "{SHIFT released}";
         Convertor convertor = defaultFormat.getConvertor(str);
         Event event = convertor.string2Event(str);
-        Assert.assertEquals(KeyReleasedEvent.class, event.getClass());
-        Assert.assertEquals(KeyWrapper.keyToCode("SHIFT"), ((KeyReleasedEvent) event).getKey());
+        assertEquals(KeyReleasedEvent.class, event.getClass());
+        assertEquals(KeyWrapper.keyToCode("SHIFT"), ((KeyReleasedEvent) event).getKey());
     }
 
     @Test
@@ -172,7 +186,7 @@ public class DefaultFormatTest {
         String str = "{rmouse released}";
         Convertor convertor = defaultFormat.getConvertor(str);
         Event event = convertor.string2Event(str);
-        Assert.assertEquals(MouseReleasedEvent.class, event.getClass());
+        assertEquals(MouseReleasedEvent.class, event.getClass());
     }
 
     @Test
@@ -180,8 +194,8 @@ public class DefaultFormatTest {
         String str = "  {rmouse pressed }   ";
         Convertor convertor = defaultFormat.getConvertor(str);
         Event event = convertor.string2Event(str);
-        Assert.assertEquals(MousePressedEvent.class, event.getClass());
-        Assert.assertEquals(MouseWrapper.keyToCode("rmouse"), ((MousePressedEvent)event).getButton());
+        assertEquals(MousePressedEvent.class, event.getClass());
+        assertEquals(MouseWrapper.keyToCode("rmouse"), ((MousePressedEvent) event).getButton());
     }
 
     @Test
@@ -189,8 +203,8 @@ public class DefaultFormatTest {
         String str = "{lmouse pressed}";
         Convertor convertor = defaultFormat.getConvertor(str);
         Event event = convertor.string2Event(str);
-        Assert.assertEquals(MousePressedEvent.class, event.getClass());
-        Assert.assertEquals(MouseWrapper.keyToCode("lmouse"), ((MousePressedEvent)event).getButton());
+        assertEquals(MousePressedEvent.class, event.getClass());
+        assertEquals(MouseWrapper.keyToCode("lmouse"), ((MousePressedEvent) event).getButton());
     }
 
     @Test
@@ -198,8 +212,8 @@ public class DefaultFormatTest {
         String str = "{ wheel pressed}";
         Convertor convertor = defaultFormat.getConvertor(str);
         Event event = convertor.string2Event(str);
-        Assert.assertEquals(MousePressedEvent.class, event.getClass());
-        Assert.assertEquals(MouseWrapper.keyToCode("wheel"), ((MousePressedEvent)event).getButton());
+        assertEquals(MousePressedEvent.class, event.getClass());
+        assertEquals(MouseWrapper.keyToCode("wheel"), ((MousePressedEvent) event).getButton());
     }
 
     @Test
@@ -207,8 +221,8 @@ public class DefaultFormatTest {
         String str = "{rmouse released }";
         Convertor convertor = defaultFormat.getConvertor(str);
         Event event = convertor.string2Event(str);
-        Assert.assertEquals(MouseReleasedEvent.class, event.getClass());
-        Assert.assertEquals(MouseWrapper.keyToCode("rmouse"), ((MouseReleasedEvent)event).getButton());
+        assertEquals(MouseReleasedEvent.class, event.getClass());
+        assertEquals(MouseWrapper.keyToCode("rmouse"), ((MouseReleasedEvent) event).getButton());
     }
 
     @Test
@@ -216,8 +230,8 @@ public class DefaultFormatTest {
         String str = "{lmouse released }";
         Convertor convertor = defaultFormat.getConvertor(str);
         Event event = convertor.string2Event(str);
-        Assert.assertEquals(MouseReleasedEvent.class, event.getClass());
-        Assert.assertEquals(MouseWrapper.keyToCode("lmouse"), ((MouseReleasedEvent)event).getButton());
+        assertEquals(MouseReleasedEvent.class, event.getClass());
+        assertEquals(MouseWrapper.keyToCode("lmouse"), ((MouseReleasedEvent) event).getButton());
     }
 
     @Test
@@ -225,9 +239,35 @@ public class DefaultFormatTest {
         String str = " {wheel   released}";
         Convertor convertor = defaultFormat.getConvertor(str);
         Event event = convertor.string2Event(str);
-        Assert.assertEquals(MouseReleasedEvent.class, event.getClass());
-        Assert.assertEquals(MouseWrapper.keyToCode("wheel"), ((MouseReleasedEvent)event).getButton());
+        assertEquals(MouseReleasedEvent.class, event.getClass());
+        assertEquals(MouseWrapper.keyToCode("wheel"), ((MouseReleasedEvent) event).getButton());
     }
 
+    @Test
+    public void mouseMoveEventTest() {
+        int x = 56;
+        int y = 99;
+        String str1 = String.format("{move (%d,%d)}", x, y);
+        Convertor convertor = defaultFormat.getConvertor(str1);
+        Event event = convertor.string2Event(str1);
+        assertEquals(event.getClass(), MouseMoveEvent.class);
+        MouseMoveEvent mouseMoveEvent = (MouseMoveEvent) event;
+        assertEquals(x, mouseMoveEvent.getX());
+        assertEquals(y, mouseMoveEvent.getY());
+    }
+
+    @Test
+    public void mouseWheelEventTest() {
+        for (int i = 0; i < 5; i++) {
+            int scrollAmount = new Random().nextInt(10) * Math.random() < 0.5 ? -1 : 1;
+            String str = String.format("{wheel %d}", scrollAmount);
+            Convertor convertor = defaultFormat.getConvertor(str);
+            Event event = convertor.string2Event(str);
+            assertEquals(event.getClass(), MouseWheelEvent.class);
+            MouseWheelEvent mouseWheelEvent = (MouseWheelEvent) event;
+            int parsedScrollAmount = mouseWheelEvent.getScrollAmount();
+            assertEquals(scrollAmount, parsedScrollAmount);
+        }
+    }
 
 }

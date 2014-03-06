@@ -36,6 +36,14 @@ public class DefaultFormat implements Format {
     private static final String MOUSE_RELEASED_PATTERN_STR = "\\s*\\{\\s*(lmouse|rmouse|wheel)\\s+released\\s*}\\s*";
     private static final Pattern MOUSE_RELEASED_PATTERN =Pattern.compile(MOUSE_RELEASED_PATTERN_STR);
 
+
+    private static final String MOUSE_MOVE_PATTERN_STR = "\\s*\\{\\s*move\\s+\\(\\s*(\\d+)\\s*,\\s*(\\d+)\\s*\\)\\s*\\}\\s*";
+    private static final Pattern MOUSE_MOVE_PATTERN = Pattern.compile(MOUSE_MOVE_PATTERN_STR);
+
+    private static final String MOUSE_WHEEL_PATTERN_STR = "\\s*\\{\\s*wheel\\s+([-]?\\s*\\d+)\\s*\\}\\s*";
+    private static final Pattern MOUSE_WHEEL_PATTERN = Pattern.compile(MOUSE_WHEEL_PATTERN_STR);
+
+
     private static final Map<Pattern, Convertor> eventFromMapping = new HashMap<Pattern, Convertor>();
 
     public DefaultFormat() {
@@ -45,12 +53,15 @@ public class DefaultFormat implements Format {
         convertorFromClass.put(MousePressedEvent.class, mousePressedConvertor);
         convertorFromClass.put(MouseReleasedEvent.class, mouseReleasedConvertor);
         convertorFromClass.put(MouseMoveEvent.class, mouseMoveConvertor);
+        convertorFromClass.put(MouseWheelEvent.class, mouseWheelConvertor);
 
         eventFromMapping.put(DELAY_PATTERN, delayConvertor);
         eventFromMapping.put(KEY_PRESSED_PATTERN, keyPressedConvertor);
         eventFromMapping.put(KEY_RELEASED_PATTERN, keyReleasedConvertor);
         eventFromMapping.put(MOUSE_PRESSED_PATTERN, mousePressedConvertor);
         eventFromMapping.put(MOUSE_RELEASED_PATTERN, mouseReleasedConvertor);
+        eventFromMapping.put(MOUSE_MOVE_PATTERN, mouseMoveConvertor);
+        eventFromMapping.put(MOUSE_WHEEL_PATTERN, mouseWheelConvertor);
     }
 
     @Override
@@ -220,7 +231,45 @@ public class DefaultFormat implements Format {
 
         @Override
         public Event string2Event(String str) {
-            return null;
+            Matcher matcher = MOUSE_MOVE_PATTERN.matcher(str);
+
+            if (matcher.find() && matcher.groupCount() > 1) {
+                String xStr = matcher.group(1);
+                String yStr = matcher.group(2);
+                try {
+                    int x = Integer.parseInt(xStr);
+                    int y = Integer.parseInt(yStr);
+                    return new MouseMoveEvent(x, y);
+                } catch (NumberFormatException iae) {
+                    return NoneEvent.INSTANCE;
+                }
+
+            } else {
+                return NoneEvent.INSTANCE;
+            }
+        }
+    };
+
+    Convertor mouseWheelConvertor = new Convertor<MouseWheelEvent>() {
+        @Override
+        public String event2String(MouseWheelEvent event) {
+            return String.format("{wheel %d}", event.getScrollAmount());
+        }
+
+        @Override
+        public Event string2Event(String str) {
+            Matcher matcher = MOUSE_WHEEL_PATTERN.matcher(str);
+            if (matcher.find()) {
+                String scrollAmountStr = matcher.group(1);
+                try {
+                    int scrollAmount = Integer.parseInt(scrollAmountStr);
+                    return new MouseWheelEvent(scrollAmount);
+                } catch (NumberFormatException nfe) {
+                    return NoneEvent.INSTANCE;
+                }
+            } else {
+                return NoneEvent.INSTANCE;
+            }
         }
     };
 

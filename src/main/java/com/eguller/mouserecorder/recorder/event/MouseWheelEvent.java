@@ -12,6 +12,11 @@ public class MouseWheelEvent implements Event{
     public MouseWheelEvent(int scrollAmount){
         this.scrollAmount = scrollAmount;
     }
+
+    public int getScrollAmount() {
+        return scrollAmount;
+    }
+
     @Override
     public void execute(Robot robot) {
         robot.mouseWheel(scrollAmount);
