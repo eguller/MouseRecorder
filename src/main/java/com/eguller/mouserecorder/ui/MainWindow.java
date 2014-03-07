@@ -36,9 +36,13 @@ public class MainWindow extends JFrame implements Observer {
     JSeparator separator;
     JMenuItem exitItem;
 
+    JMenu optionMenu;
+    JCheckBoxMenuItem minimizeOnRecordItem;
+    JCheckBoxMenuItem minimizeOnPlayItem;
+
     JMenu aboutMenu;
-    JMenu aboutItem;
-    JMenu helpItem;
+    JMenuItem aboutItem;
+    JMenuItem helpItem;
 
     JLabel statusBar;
 
@@ -50,8 +54,6 @@ public class MainWindow extends JFrame implements Observer {
 
     Recorder recorder;
     Player player;
-
-    final JFileChooser fc = new JFileChooser();
 
     public MainWindow(Recorder recorder, Player player) {
         addComponentstoPane(getContentPane());
@@ -90,11 +92,19 @@ public class MainWindow extends JFrame implements Observer {
         fileMenu.add(exitItem);
 
         aboutMenu = new JMenu("About");
-        aboutItem = new JMenu("About");
-        helpItem = new JMenu("Help");
+        aboutItem = new JMenuItem("About");
+        helpItem = new JMenuItem("Help");
+
+        optionMenu = new JMenu("Options");
+        minimizeOnRecordItem = new JCheckBoxMenuItem("Minimize on record");
+        minimizeOnPlayItem = new JCheckBoxMenuItem("Minimize on play");
+        optionMenu.add(minimizeOnRecordItem);
+        optionMenu.add(minimizeOnPlayItem);
 
         menuBar.add(fileMenu);
+        menuBar.add(optionMenu);
         menuBar.add(aboutMenu);
+
 
         statusBar = new JLabel();
         statusBar.setFont(statusBar.getFont().deriveFont(10.0f));
@@ -119,7 +129,7 @@ public class MainWindow extends JFrame implements Observer {
         addActionListeners();
     }
 
-    public void addActionListeners(){
+    public void addActionListeners() {
         exitItem.addActionListener(new ExitAction());
         saveItem.addActionListener(new SaveFileAction(this));
         openItem.addActionListener(new OpenFileAction(this));
@@ -137,7 +147,7 @@ public class MainWindow extends JFrame implements Observer {
 
     }
 
-    public Record getRecord(){
+    public Record getRecord() {
         return recorder.getRecord();
     }
 
@@ -158,6 +168,7 @@ public class MainWindow extends JFrame implements Observer {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             ButtonStates.RECORDING.apply(MainWindow.this);
+            minimizeOnRecord();
             recorder.record();
         }
     }
@@ -166,6 +177,7 @@ public class MainWindow extends JFrame implements Observer {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             ButtonStates.PLAYING.apply(MainWindow.this);
+            minimizeOnPlay();
             player.play(recorder.getRecord());
 
         }
@@ -176,6 +188,18 @@ public class MainWindow extends JFrame implements Observer {
         public void actionPerformed(ActionEvent actionEvent) {
             ButtonStates.POSTRECORD.apply(MainWindow.this);
             recorder.stop();
+        }
+    }
+
+    public void minimizeOnRecord() {
+        if (minimizeOnRecordItem.isSelected()) {
+            this.setState(Frame.ICONIFIED);
+        }
+    }
+
+    public void minimizeOnPlay() {
+        if (minimizeOnPlayItem.isSelected()) {
+            this.setState(Frame.ICONIFIED);
         }
     }
 

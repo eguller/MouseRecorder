@@ -20,6 +20,7 @@ public class MouseRecorder
 {
 
     public static void main( String[] args ) {
+
         setLookAndFeel();
         SwingUtilities.invokeLater(new Runnable() {
             @Override
