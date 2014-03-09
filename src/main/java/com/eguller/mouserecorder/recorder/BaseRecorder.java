@@ -1,5 +1,6 @@
 package com.eguller.mouserecorder.recorder;
 
+import com.eguller.mouserecorder.config.Config;
 import com.eguller.mouserecorder.format.def.MouseWrapper;
 import com.eguller.mouserecorder.recorder.api.Recorder;
 import com.eguller.mouserecorder.recorder.event.*;
@@ -13,25 +14,27 @@ import org.jnativehook.mouse.*;
  * User: eguller
  * Date: 11/24/13
  * Time: 4:08 PM
- *
+ * <p/>
  * Record mouse and keyboard actions.
  */
 public class BaseRecorder implements NativeMouseMotionListener, NativeKeyListener, NativeMouseListener, NativeMouseWheelListener, Recorder {
 
 
-    Record record = new Record();
+    Record record;
     //private static List<Event> inputEventList = new LinkedList<Event>();
+    Config config;
 
-    public BaseRecorder(){
-
+    public BaseRecorder(Config config) {
+        this.config = config;
+        record = new Record(config);
     }
 
-    public void record(){
+    public void record() {
         registerNativeHook();
-        record = new Record();
+        record = new Record(config);
     }
 
-    public Record stop(){
+    public Record stop() {
         deRegisterNativeHook();
         return record;
     }
@@ -50,32 +53,31 @@ public class BaseRecorder implements NativeMouseMotionListener, NativeKeyListene
      * Register native hook and registerNativeHook capturing
      */
     public void registerNativeHook() {
-            try {
-                GlobalScreen.registerNativeHook();
-            } catch (NativeHookException ex) {
-                System.err.println("There was a problem registering the native hook.");
-                System.err.println(ex.getMessage());
-            }
+        try {
+            GlobalScreen.registerNativeHook();
+        } catch (NativeHookException ex) {
+            System.err.println("There was a problem registering the native hook.");
+            System.err.println(ex.getMessage());
+        }
 
-            //Construct the example object and initialze native hook.
-            GlobalScreen.getInstance().addNativeKeyListener(this);
-            GlobalScreen.getInstance().addNativeMouseListener(this);
-            GlobalScreen.getInstance().addNativeMouseMotionListener(this);
-            GlobalScreen.getInstance().addNativeMouseWheelListener(this);
+        //Construct the example object and initialze native hook.
+        GlobalScreen.getInstance().addNativeKeyListener(this);
+        GlobalScreen.getInstance().addNativeMouseListener(this);
+        GlobalScreen.getInstance().addNativeMouseMotionListener(this);
+        GlobalScreen.getInstance().addNativeMouseWheelListener(this);
 
     }
-
 
 
     /**
      * De-register native hook and deRegisterNativeHook capturing
      */
-    public void deRegisterNativeHook(){
-             GlobalScreen.unregisterNativeHook();
-             GlobalScreen.getInstance().removeNativeKeyListener(this);
-             GlobalScreen.getInstance().removeNativeMouseListener(this);
-             GlobalScreen.getInstance().removeNativeMouseMotionListener(this);
-             GlobalScreen.getInstance().removeNativeMouseWheelListener(this);
+    public void deRegisterNativeHook() {
+        GlobalScreen.unregisterNativeHook();
+        GlobalScreen.getInstance().removeNativeKeyListener(this);
+        GlobalScreen.getInstance().removeNativeMouseListener(this);
+        GlobalScreen.getInstance().removeNativeMouseMotionListener(this);
+        GlobalScreen.getInstance().removeNativeMouseWheelListener(this);
     }
 
     @Override
@@ -86,7 +88,7 @@ public class BaseRecorder implements NativeMouseMotionListener, NativeKeyListene
 
     @Override
     public void nativeKeyReleased(NativeKeyEvent nativeKeyEvent) {
-       record.post(new KeyReleasedEvent(nativeKeyEvent.getKeyCode()));
+        record.post(new KeyReleasedEvent(nativeKeyEvent.getKeyCode()));
     }
 
     @Override
@@ -129,9 +131,9 @@ public class BaseRecorder implements NativeMouseMotionListener, NativeKeyListene
 
     @Override
     public void nativeMouseReleased(NativeMouseEvent nativeMouseEvent) {
-       int maskCode = MouseWrapper.native2Code(nativeMouseEvent.getButton());
-       record.post(new MouseReleasedEvent(maskCode));
-       System.out.println("Mouse Released - button: " + nativeMouseEvent.getButton() + " modifier: " + nativeMouseEvent.getModifiers());
+        int maskCode = MouseWrapper.native2Code(nativeMouseEvent.getButton());
+        record.post(new MouseReleasedEvent(maskCode));
+        System.out.println("Mouse Released - button: " + nativeMouseEvent.getButton() + " modifier: " + nativeMouseEvent.getModifiers());
     }
 
     @Override

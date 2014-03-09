@@ -1,5 +1,6 @@
 package com.eguller.mouserecorder.recorder;
 
+import com.eguller.mouserecorder.config.Config;
 import com.eguller.mouserecorder.recorder.event.DelayEvent;
 import com.eguller.mouserecorder.recorder.event.Event;
 
@@ -14,28 +15,31 @@ import java.util.List;
 public class Record {
     private List<Event> eventList = new ArrayList<Event>();
     long lastEvent;
-    public Record(){
+    Config config;
+
+    public Record(Config config) {
         this.lastEvent = System.currentTimeMillis();
+        this.config = config;
     }
 
-    public void post(Event event){
+    public void post(Event event) {
         addDelayEvent();
         eventList.add(event);
     }
 
-    public void add(Event event){
+    public void add(Event event) {
         eventList.add(event);
     }
 
     private void addDelayEvent() {
         long elapsed = System.currentTimeMillis() - lastEvent;
         lastEvent = System.currentTimeMillis();
-        if(elapsed > 0){
-            eventList.add(new DelayEvent(elapsed));
+        if (elapsed > 0) {
+            eventList.add(new DelayEvent(elapsed, config));
         }
     }
 
-    public List<Event> getEventList(){
-         return eventList;
+    public List<Event> getEventList() {
+        return eventList;
     }
 }

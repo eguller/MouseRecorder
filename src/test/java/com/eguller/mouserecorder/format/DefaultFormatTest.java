@@ -1,5 +1,7 @@
 package com.eguller.mouserecorder.format;
 
+import com.eguller.mouserecorder.config.Config;
+import com.eguller.mouserecorder.config.VolatileConfig;
 import com.eguller.mouserecorder.format.api.Convertor;
 import com.eguller.mouserecorder.format.def.DefaultFormat;
 import com.eguller.mouserecorder.format.def.KeyWrapper;
@@ -19,11 +21,12 @@ import static org.junit.Assert.assertNotNull;
  * Time: 7:23 AM
  */
 public class DefaultFormatTest {
-    DefaultFormat defaultFormat = new DefaultFormat();
+    Config config = new VolatileConfig();
+    DefaultFormat defaultFormat = new DefaultFormat(config);
 
     @Test
     public void delayEventConvertorTest() {
-        DelayEvent delayEvent = new DelayEvent(1923);
+        DelayEvent delayEvent = new DelayEvent(1923, config);
         Convertor convertor = defaultFormat.getConvertor(delayEvent);
         String str = convertor.event2String(delayEvent);
         String expected = "{delay 1923}";

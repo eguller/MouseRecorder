@@ -1,11 +1,11 @@
 package com.eguller.mouserecorder.ui;
 
+import com.eguller.mouserecorder.config.Config;
+import com.eguller.mouserecorder.format.def.DefaultFormat;
 import com.eguller.mouserecorder.player.api.Player;
 import com.eguller.mouserecorder.recorder.Record;
 import com.eguller.mouserecorder.recorder.api.Recorder;
-import com.eguller.mouserecorder.ui.action.ExitAction;
-import com.eguller.mouserecorder.ui.action.OpenFileAction;
-import com.eguller.mouserecorder.ui.action.SaveFileAction;
+import com.eguller.mouserecorder.ui.action.*;
 import com.eguller.mouserecorder.ui.state.ButtonStates;
 
 import javax.imageio.ImageIO;
@@ -39,6 +39,12 @@ public class MainWindow extends JFrame implements Observer {
     JMenu optionMenu;
     JCheckBoxMenuItem minimizeOnRecordItem;
     JCheckBoxMenuItem minimizeOnPlayItem;
+    JCheckBoxMenuItem infiniteLoopItem;
+
+    JLabel loopCountLabel;
+    JSpinner loopCountSpinner;
+
+    JLabel speedLabel;
 
     JMenu aboutMenu;
     JMenuItem aboutItem;
@@ -54,13 +60,16 @@ public class MainWindow extends JFrame implements Observer {
 
     Recorder recorder;
     Player player;
+    Config config;
 
-    public MainWindow(Recorder recorder, Player player) {
+    public MainWindow(Recorder recorder, Player player, Config config) {
+        this.config = config;
         addComponentstoPane(getContentPane());
         this.setResizable(false);
         this.recorder = recorder;
         this.player = player;
         player.addObserver(this);
+
     }
 
     private void addComponentstoPane(Container container) {
@@ -98,8 +107,22 @@ public class MainWindow extends JFrame implements Observer {
         optionMenu = new JMenu("Options");
         minimizeOnRecordItem = new JCheckBoxMenuItem("Minimize on record");
         minimizeOnPlayItem = new JCheckBoxMenuItem("Minimize on play");
+        infiniteLoopItem = new JCheckBoxMenuItem("Infinite Loop");
         optionMenu.add(minimizeOnRecordItem);
         optionMenu.add(minimizeOnPlayItem);
+        optionMenu.addSeparator();
+
+        loopCountLabel = new JLabel("Loop Count", SwingConstants.HORIZONTAL);
+        loopCountSpinner = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
+        loopCountLabel.setLabelFor(loopCountSpinner);
+        optionMenu.add(infiniteLoopItem);
+        optionMenu.add(loopCountLabel);
+        optionMenu.add(loopCountSpinner);
+
+        optionMenu.addSeparator();
+        speedLabel = new JLabel("Speed");
+        optionMenu.add(speedLabel);
+
 
         menuBar.add(fileMenu);
         menuBar.add(optionMenu);
@@ -127,13 +150,23 @@ public class MainWindow extends JFrame implements Observer {
         setTitle("Mouse BaseRecorder");
 
         addActionListeners();
+        loadConfig();
     }
 
     public void addActionListeners() {
         exitItem.addActionListener(new ExitAction());
-        saveItem.addActionListener(new SaveFileAction(this));
-        openItem.addActionListener(new OpenFileAction(this));
+        saveItem.addActionListener(new SaveFileAction(this, new DefaultFormat(config)));
+        openItem.addActionListener(new OpenFileAction(this, new DefaultFormat(config)));
+        minimizeOnRecordItem.addActionListener(new MinimizeOnRecordAction(config));
+        minimizeOnPlayItem.addActionListener(new MinimizeOnPlayAction(config));
+        infiniteLoopItem.addActionListener(new InfiniteLoopAction(config));
 
+    }
+
+    public void loadConfig() {
+        minimizeOnPlayItem.setState(config.getMinimizeOnPlay());
+        minimizeOnRecordItem.setState(config.getMinimizeOnPlay());
+        infiniteLoopItem.setState(config.isInfiniteLoop());
     }
 
     public void loadImages() {
@@ -192,13 +225,13 @@ public class MainWindow extends JFrame implements Observer {
     }
 
     public void minimizeOnRecord() {
-        if (minimizeOnRecordItem.isSelected()) {
+        if (config.getMinimizeOnRecord()) {
             this.setState(Frame.ICONIFIED);
         }
     }
 
     public void minimizeOnPlay() {
-        if (minimizeOnPlayItem.isSelected()) {
+        if (config.getMinimizeOnPlay()) {
             this.setState(Frame.ICONIFIED);
         }
     }

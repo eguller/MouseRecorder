@@ -1,7 +1,6 @@
 package com.eguller.mouserecorder.ui.action;
 
 import com.eguller.mouserecorder.format.api.Format;
-import com.eguller.mouserecorder.format.def.DefaultFormat;
 import com.eguller.mouserecorder.recorder.Record;
 import com.eguller.mouserecorder.ui.MainWindow;
 import com.eguller.mouserecorder.ui.state.ButtonStates;
@@ -18,10 +17,11 @@ import java.io.File;
  */
 public class OpenFileAction implements ActionListener {
     MainWindow mainWindow = null;
-    Format format = new DefaultFormat();
+    Format format;
 
-    public OpenFileAction(MainWindow mainWindow) {
+    public OpenFileAction(MainWindow mainWindow, Format format) {
         this.mainWindow = mainWindow;
+        this.format = format;
     }
 
     @Override

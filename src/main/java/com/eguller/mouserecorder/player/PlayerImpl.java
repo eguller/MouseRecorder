@@ -1,19 +1,13 @@
 package com.eguller.mouserecorder.player;
 
+import com.eguller.mouserecorder.config.Config;
 import com.eguller.mouserecorder.player.api.Player;
 import com.eguller.mouserecorder.recorder.Record;
 import com.eguller.mouserecorder.recorder.event.Event;
-import org.jnativehook.NativeInputEvent;
-import org.jnativehook.keyboard.NativeKeyEvent;
-import org.jnativehook.mouse.NativeMouseEvent;
 
-import java.awt.Robot;
-import java.awt.AWTException;
-import java.awt.event.InputEvent;
-import java.util.List;
+import java.awt.*;
 import java.util.Observable;
 import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
@@ -27,11 +21,14 @@ public class PlayerImpl extends Observable implements Runnable, Player {
     Robot robot;
     Record record;
     Executor executor = Executors.newSingleThreadExecutor();
-    public PlayerImpl() throws AWTException {
-        robot = new Robot();
+    Config config = null;
+
+    public PlayerImpl(Config config) throws AWTException {
+        this.config = config;
+        this.robot = new Robot();
     }
 
-    public void play(Record record){
+    public void play(Record record) {
         this.record = record;
         executor.execute(this);
     }

@@ -1,5 +1,6 @@
 package com.eguller.mouserecorder.format.def;
 
+import com.eguller.mouserecorder.config.Config;
 import com.eguller.mouserecorder.exceptions.MouseRecorderException;
 import com.eguller.mouserecorder.format.api.Convertor;
 import com.eguller.mouserecorder.format.api.Format;
@@ -18,6 +19,7 @@ import java.util.regex.Pattern;
  * Time: 2:38 AM
  */
 public class DefaultFormat implements Format {
+    Config config;
     private static final String LINE_SEPERATOR = System.getProperty("line.separator");
     private static final Map<Class, Convertor> convertorFromClass = new HashMap<Class, Convertor>();
 
@@ -46,7 +48,8 @@ public class DefaultFormat implements Format {
 
     private static final Map<Pattern, Convertor> eventFromMapping = new HashMap<Pattern, Convertor>();
 
-    public DefaultFormat() {
+    public DefaultFormat(Config config) {
+        this.config = config;
         convertorFromClass.put(DelayEvent.class, delayConvertor);
         convertorFromClass.put(KeyPressedEvent.class, keyPressedConvertor);
         convertorFromClass.put(KeyReleasedEvent.class, keyReleasedConvertor);
@@ -97,7 +100,7 @@ public class DefaultFormat implements Format {
 
     @Override
     public Record load(File file) {
-        Record record = new Record();
+        Record record = new Record(config);
         try {
 
             BufferedReader br = new BufferedReader(new FileReader(file));
@@ -145,7 +148,7 @@ public class DefaultFormat implements Format {
             Matcher matcher = DELAY_PATTERN.matcher(str);
             if(matcher.find()){
                 String delayStr = matcher.group(1);
-                return new DelayEvent(Long.parseLong(delayStr));
+                return new DelayEvent(Long.parseLong(delayStr), config);
             }
             return NoneEvent.INSTANCE;
         }

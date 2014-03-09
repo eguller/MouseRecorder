@@ -1,5 +1,7 @@
 package com.eguller.mouserecorder;
 
+import com.eguller.mouserecorder.config.Config;
+import com.eguller.mouserecorder.config.PersistentConfig;
 import com.eguller.mouserecorder.player.PlayerImpl;
 import com.eguller.mouserecorder.player.api.Player;
 import com.eguller.mouserecorder.recorder.BaseRecorder;
@@ -13,13 +15,11 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- *
  * Initializes frame
  */
-public class MouseRecorder
-{
+public class MouseRecorder {
 
-    public static void main( String[] args ) {
+    public static void main(String[] args) {
 
         setLookAndFeel();
         SwingUtilities.invokeLater(new Runnable() {
@@ -27,7 +27,8 @@ public class MouseRecorder
             public void run() {
                 JFrame frame = null;
                 try {
-                    frame = new MainWindow(createRecorder(), createPlayer());
+                    Config config = createConfig();
+                    frame = new MainWindow(createRecorder(config), createPlayer(config), config);
                 } catch (AWTException e) {
                     MessageBox.showError("Player", "Creating player failed.");
                     System.exit(-1);
@@ -39,34 +40,34 @@ public class MouseRecorder
         });
     }
 
-    private static Recorder createRecorder(){
-        if(OS.isMacOSX()){
-            return new MacRecorder();
+    private static Recorder createRecorder(Config config) {
+        if (OS.isMacOSX()) {
+            return new MacRecorder(config);
         } else {
-            return new BaseRecorder();
+            return new BaseRecorder(config);
         }
     }
 
-    private static Player createPlayer() throws AWTException {
-        return new PlayerImpl();
+    private static Player createPlayer(Config config) throws AWTException {
+        return new PlayerImpl(config);
     }
 
-    public static void setLookAndFeel(){
+    private static Config createConfig() {
+        return new PersistentConfig();
+    }
+
+    public static void setLookAndFeel() {
         try {
             // Set System L&F
             UIManager.setLookAndFeel(
                     UIManager.getSystemLookAndFeelClassName());
-        }
-        catch (UnsupportedLookAndFeelException e) {
+        } catch (UnsupportedLookAndFeelException e) {
             // handle exception
-        }
-        catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             // handle exception
-        }
-        catch (InstantiationException e) {
+        } catch (InstantiationException e) {
             // handle exception
-        }
-        catch (IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             // handle exception
         }
     }

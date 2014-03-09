@@ -1,5 +1,6 @@
 package com.eguller.mouserecorder.recorder;
 
+import com.eguller.mouserecorder.config.Config;
 import com.eguller.mouserecorder.jni.mac.DeviceAccess;
 
 /**
@@ -8,11 +9,12 @@ import com.eguller.mouserecorder.jni.mac.DeviceAccess;
  * Time: 11:45 PM
  */
 public class MacRecorder extends BaseRecorder {
-    public MacRecorder() {
-        super();
+    public MacRecorder(Config config) {
+        super(config);
     }
+
     @Override
-    public void record(){
+    public void record() {
         DeviceAccess.enableIfDisabled();
         super.record();
     }
