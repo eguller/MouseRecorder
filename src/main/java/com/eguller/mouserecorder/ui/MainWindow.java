@@ -117,7 +117,7 @@ public class MainWindow extends JFrame implements Observer {
         optionMenu.add(loopCountMenuItem);
 
         optionMenu.addSeparator();
-        speedMenuItem = new SpeedMenuItem();
+        speedMenuItem = new SpeedMenuItem(config);
         optionMenu.add(speedMenuItem);
 
 
@@ -148,6 +148,10 @@ public class MainWindow extends JFrame implements Observer {
 
         addActionListeners();
         loadConfig();
+    }
+
+    private static int config2SliderSpeed(double configSpeed) {
+        return (int) Math.round(configSpeed * 8);
     }
 
     public void addActionListeners() {
