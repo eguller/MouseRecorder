@@ -1,6 +1,7 @@
 package com.eguller.mouserecorder.ui.action;
 
 import com.eguller.mouserecorder.config.Config;
+import com.eguller.mouserecorder.ui.LoopCountMenuItem;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -11,8 +12,12 @@ import java.awt.event.ActionEvent;
  * Time: 11:50 PM
  */
 public class InfiniteLoopAction extends BooleanMenuAction {
-    public InfiniteLoopAction(Config config) {
+
+    LoopCountMenuItem loopCountMenuItem;
+
+    public InfiniteLoopAction(Config config, LoopCountMenuItem loopCountMenuItem) {
         super(config);
+        this.loopCountMenuItem = loopCountMenuItem;
     }
 
     @Override
@@ -20,8 +25,10 @@ public class InfiniteLoopAction extends BooleanMenuAction {
         JCheckBoxMenuItem infiniteLoopMenuItem = (JCheckBoxMenuItem) actionEvent.getSource();
         if (infiniteLoopMenuItem.isSelected()) {
             config.activeInfiniteLoop();
+            loopCountMenuItem.setVisible(false);
         } else {
             config.deactivateInfiniteLoop();
+            loopCountMenuItem.setVisible(true);
         }
     }
 }

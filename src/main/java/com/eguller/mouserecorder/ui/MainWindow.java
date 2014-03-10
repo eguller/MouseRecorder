@@ -40,9 +40,9 @@ public class MainWindow extends JFrame implements Observer {
     JCheckBoxMenuItem minimizeOnRecordItem;
     JCheckBoxMenuItem minimizeOnPlayItem;
     JCheckBoxMenuItem infiniteLoopItem;
+    LoopCountMenuItem loopCountMenuItem;
+    SpeedMenuItem speedMenuItem;
 
-    JLabel loopCountLabel;
-    JSpinner loopCountSpinner;
 
     JLabel speedLabel;
 
@@ -112,16 +112,13 @@ public class MainWindow extends JFrame implements Observer {
         optionMenu.add(minimizeOnPlayItem);
         optionMenu.addSeparator();
 
-        loopCountLabel = new JLabel("Loop Count", SwingConstants.HORIZONTAL);
-        loopCountSpinner = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
-        loopCountLabel.setLabelFor(loopCountSpinner);
         optionMenu.add(infiniteLoopItem);
-        optionMenu.add(loopCountLabel);
-        optionMenu.add(loopCountSpinner);
+        loopCountMenuItem = new LoopCountMenuItem(config);
+        optionMenu.add(loopCountMenuItem);
 
         optionMenu.addSeparator();
-        speedLabel = new JLabel("Speed");
-        optionMenu.add(speedLabel);
+        speedMenuItem = new SpeedMenuItem();
+        optionMenu.add(speedMenuItem);
 
 
         menuBar.add(fileMenu);
@@ -159,14 +156,18 @@ public class MainWindow extends JFrame implements Observer {
         openItem.addActionListener(new OpenFileAction(this, new DefaultFormat(config)));
         minimizeOnRecordItem.addActionListener(new MinimizeOnRecordAction(config));
         minimizeOnPlayItem.addActionListener(new MinimizeOnPlayAction(config));
-        infiniteLoopItem.addActionListener(new InfiniteLoopAction(config));
-
+        infiniteLoopItem.addActionListener(new InfiniteLoopAction(config, loopCountMenuItem));
     }
 
     public void loadConfig() {
         minimizeOnPlayItem.setState(config.getMinimizeOnPlay());
         minimizeOnRecordItem.setState(config.getMinimizeOnPlay());
         infiniteLoopItem.setState(config.isInfiniteLoop());
+        if (config.isInfiniteLoop()) {
+            loopCountMenuItem.setVisible(false);
+        } else {
+            loopCountMenuItem.setVisible(true);
+        }
     }
 
     public void loadImages() {
