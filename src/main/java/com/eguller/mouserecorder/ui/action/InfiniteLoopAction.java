@@ -22,13 +22,18 @@ public class InfiniteLoopAction extends BooleanMenuAction {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        JCheckBoxMenuItem infiniteLoopMenuItem = (JCheckBoxMenuItem) actionEvent.getSource();
+        JCheckBox infiniteLoopMenuItem = (JCheckBox) actionEvent.getSource();
         if (infiniteLoopMenuItem.isSelected()) {
             config.activeInfiniteLoop();
             loopCountMenuItem.setVisible(false);
         } else {
             config.deactivateInfiniteLoop();
             loopCountMenuItem.setVisible(true);
+
         }
+
+        MenuElement[] selectionPath = MenuSelectionManager.defaultManager().getSelectedPath();
+        MenuSelectionManager.defaultManager().clearSelectedPath();
+        MenuSelectionManager.defaultManager().setSelectedPath(selectionPath);
     }
 }

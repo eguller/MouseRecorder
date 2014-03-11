@@ -9,7 +9,8 @@ import java.util.Observer;
  * Date: 2/21/14
  * Time: 11:43 PM
  */
-public interface Player {
+public interface Player extends LoopEventSource {
     public void play(Record record);
     public void addObserver(Observer observer);
+
 }

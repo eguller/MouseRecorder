@@ -25,7 +25,7 @@ public class DelayEvent implements Event {
 
     @Override
     public void execute(Robot robot) {
-        long speedDelay = (long) (delay * config.getSpeed());
+        long speedDelay = (long) (delay / config.getSpeed());
         if (speedDelay > 0) {
             try {
                 Thread.sleep(speedDelay);

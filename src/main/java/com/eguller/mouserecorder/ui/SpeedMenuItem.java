@@ -15,15 +15,14 @@ import java.util.Hashtable;
  * Time: 7:19 AM
  */
 public class SpeedMenuItem extends JPanel {
-    private static final int SPEED_FACTOR = 8;
-    private static final int MIN = -4;
-    private static final int MAX = 4;
+    private static final int MIN = -5;
+    private static final int MAX = 5;
     JLabel speedLabel;
     JSlider speedSlider;
 
-    Config config;
+    final Config config;
 
-    public SpeedMenuItem(Config config) {
+    public SpeedMenuItem(final Config config) {
         this.config = config;
         speedLabel = new JLabel("Speed");
         speedSlider = new JSlider(MIN, MAX);
@@ -31,7 +30,8 @@ public class SpeedMenuItem extends JPanel {
         speedLabel.setLabelFor(speedSlider);
 
         Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
-        labelTable.put(-4, new JLabel("Slow"));
+        labelTable.put(-5, new JLabel("Slow"));
+        labelTable.put(-4, new JLabel(""));
         labelTable.put(-3, new JLabel(""));
         labelTable.put(-2, new JLabel(""));
         labelTable.put(-1, new JLabel(""));
@@ -39,19 +39,22 @@ public class SpeedMenuItem extends JPanel {
         labelTable.put(1, new JLabel(""));
         labelTable.put(2, new JLabel(""));
         labelTable.put(3, new JLabel(""));
-        labelTable.put(4, new JLabel("Fast"));
+        labelTable.put(4, new JLabel(""));
+        labelTable.put(5, new JLabel("Fast"));
         speedSlider.setLabelTable(labelTable);
         speedSlider.setPaintTicks(true);
         speedSlider.setMinorTickSpacing(1);
         speedSlider.setPaintLabels(true);
         speedSlider.setPaintTrack(true);
+        speedSlider.setSnapToTicks(true);
 
         speedLabel.setBorder(new EmptyBorder(0, 5, 0, 0));
 
         speedSlider.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent changeEvent) {
-
+                int value = speedSlider.getValue();
+                config.setSpeed(Math.pow(2, value));
             }
         });
 
@@ -62,7 +65,7 @@ public class SpeedMenuItem extends JPanel {
 
     }
 
-    private static int config2SliderSpeed(double configSpeed) {
-        return (int) Math.round(configSpeed * SPEED_FACTOR);
+    public void setSpeed(int speed) {
+        this.speedSlider.setValue(speed);
     }
 }

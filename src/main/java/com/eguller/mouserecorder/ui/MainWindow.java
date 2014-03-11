@@ -2,7 +2,9 @@ package com.eguller.mouserecorder.ui;
 
 import com.eguller.mouserecorder.config.Config;
 import com.eguller.mouserecorder.format.def.DefaultFormat;
+import com.eguller.mouserecorder.player.api.LoopEventListener;
 import com.eguller.mouserecorder.player.api.Player;
+import com.eguller.mouserecorder.player.event.LoopStartedEvent;
 import com.eguller.mouserecorder.recorder.Record;
 import com.eguller.mouserecorder.recorder.api.Recorder;
 import com.eguller.mouserecorder.ui.action.*;
@@ -23,7 +25,7 @@ import java.util.Observer;
  * Date: 11/24/13
  * Time: 3:28 PM
  */
-public class MainWindow extends JFrame implements Observer {
+public class MainWindow extends JFrame implements Observer, LoopEventListener {
     JMenuBar menuBar;
     JButton playButton;
     JButton recordButton;
@@ -39,12 +41,9 @@ public class MainWindow extends JFrame implements Observer {
     JMenu optionMenu;
     JCheckBoxMenuItem minimizeOnRecordItem;
     JCheckBoxMenuItem minimizeOnPlayItem;
-    JCheckBoxMenuItem infiniteLoopItem;
+    InfiniteLoopMenuItem infiniteLoopMenuItem;
     LoopCountMenuItem loopCountMenuItem;
     SpeedMenuItem speedMenuItem;
-
-
-    JLabel speedLabel;
 
     JMenu aboutMenu;
     JMenuItem aboutItem;
@@ -69,6 +68,7 @@ public class MainWindow extends JFrame implements Observer {
         this.recorder = recorder;
         this.player = player;
         player.addObserver(this);
+        player.addLoopEventListener(this);
 
     }
 
@@ -107,12 +107,13 @@ public class MainWindow extends JFrame implements Observer {
         optionMenu = new JMenu("Options");
         minimizeOnRecordItem = new JCheckBoxMenuItem("Minimize on record");
         minimizeOnPlayItem = new JCheckBoxMenuItem("Minimize on play");
-        infiniteLoopItem = new JCheckBoxMenuItem("Infinite Loop");
+
         optionMenu.add(minimizeOnRecordItem);
         optionMenu.add(minimizeOnPlayItem);
         optionMenu.addSeparator();
 
-        optionMenu.add(infiniteLoopItem);
+        infiniteLoopMenuItem = new InfiniteLoopMenuItem();
+        optionMenu.add(infiniteLoopMenuItem);
         loopCountMenuItem = new LoopCountMenuItem(config);
         optionMenu.add(loopCountMenuItem);
 
@@ -151,7 +152,7 @@ public class MainWindow extends JFrame implements Observer {
     }
 
     private static int config2SliderSpeed(double configSpeed) {
-        return (int) Math.round(configSpeed * 8);
+        return (int) Math.round(Math.log(configSpeed) / Math.log(2));
     }
 
     public void addActionListeners() {
@@ -160,18 +161,20 @@ public class MainWindow extends JFrame implements Observer {
         openItem.addActionListener(new OpenFileAction(this, new DefaultFormat(config)));
         minimizeOnRecordItem.addActionListener(new MinimizeOnRecordAction(config));
         minimizeOnPlayItem.addActionListener(new MinimizeOnPlayAction(config));
-        infiniteLoopItem.addActionListener(new InfiniteLoopAction(config, loopCountMenuItem));
+        infiniteLoopMenuItem.addActionListener(new InfiniteLoopAction(config, loopCountMenuItem));
     }
 
     public void loadConfig() {
         minimizeOnPlayItem.setState(config.getMinimizeOnPlay());
         minimizeOnRecordItem.setState(config.getMinimizeOnPlay());
-        infiniteLoopItem.setState(config.isInfiniteLoop());
+        infiniteLoopMenuItem.setSelected(config.isInfiniteLoop());
         if (config.isInfiniteLoop()) {
             loopCountMenuItem.setVisible(false);
         } else {
             loopCountMenuItem.setVisible(true);
         }
+        int speed = config2SliderSpeed(config.getSpeed());
+        speedMenuItem.setSpeed(speed);
     }
 
     public void loadImages() {
@@ -197,6 +200,17 @@ public class MainWindow extends JFrame implements Observer {
     public void update(Observable observable, Object o) {
         ButtonStates.POSTPLAY.apply(MainWindow.this);
 
+    }
+
+    @Override
+    public void loopStarted(LoopStartedEvent loopStartedEvent) {
+        String message = "";
+        if (loopStartedEvent.isInfiniteLoop()) {
+            message = String.format("Loop %d of \\u221E", loopStartedEvent.getCurrentLoop() + 1);
+        } else {
+            message = String.format("Loop %d of %d", loopStartedEvent.getCurrentLoop() + 1, loopStartedEvent.getTotalLoop());
+        }
+        getStatusBar().setText(message);
     }
 
     /**
