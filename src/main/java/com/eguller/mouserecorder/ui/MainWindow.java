@@ -69,7 +69,7 @@ public class MainWindow extends JFrame implements Observer, LoopEventListener {
         this.player = player;
         player.addObserver(this);
         player.addLoopEventListener(this);
-
+        showAndLocate();
     }
 
     private void addComponentstoPane(Container container) {
@@ -147,12 +147,15 @@ public class MainWindow extends JFrame implements Observer, LoopEventListener {
 
         setTitle("Mouse BaseRecorder");
 
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.pack();
-        this.setVisible(true);
 
         addActionListeners();
         loadConfig();
+    }
+
+    public void showAndLocate() {
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.pack();
+        this.setVisible(true);
         centerScreen();
     }
 
