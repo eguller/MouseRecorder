@@ -144,11 +144,21 @@ public class MainWindow extends JFrame implements Observer, LoopEventListener {
         container.add(buttonPanel, BorderLayout.CENTER);
         container.add(statusBar, BorderLayout.PAGE_END);
         setResizable(false);
-        setSize(512, 512);
+
         setTitle("Mouse BaseRecorder");
+
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.pack();
+        this.setVisible(true);
 
         addActionListeners();
         loadConfig();
+        centerScreen();
+    }
+
+    public void centerScreen() {
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
     }
 
     private static int config2SliderSpeed(double configSpeed) {

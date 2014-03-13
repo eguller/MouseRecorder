@@ -33,9 +33,7 @@ public class MouseRecorder {
                     MessageBox.showError("Player", "Creating player failed.");
                     System.exit(-1);
                 }
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.pack();
-                frame.setVisible(true);
+
             }
         });
     }
