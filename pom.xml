@@ -92,10 +92,11 @@
                         <configuration>
                             <target>
                                 <property name="project.jar"
-                                          value="${artifactId}-${version}-jar-with-dependencies.jar"/>
+                                          value="${project.artifactId}-${project.version}-jar-with-dependencies.jar"/>
                                 <property name="jnativehook.jar" value="${jnativehook.jar}"/>
                                 <property name="jnativehook.absolute" value="${jnativehook.absolute}"/>
                                 <property name="jnativehook.dir" value="${jnativehook.dir}"/>
+                                <property name="project.version" value="${project.version}"/>
                                 <ant antfile="ant/build.xml"/>
                             </target>
                         </configuration>
