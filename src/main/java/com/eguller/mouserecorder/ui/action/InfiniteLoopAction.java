@@ -26,14 +26,22 @@ public class InfiniteLoopAction extends BooleanMenuAction {
         if (infiniteLoopMenuItem.isSelected()) {
             config.activeInfiniteLoop();
             loopCountMenuItem.setVisible(false);
+            refreshAndClose();
         } else {
             config.deactivateInfiniteLoop();
             loopCountMenuItem.setVisible(true);
+            refreshAndKeepOpen();
 
         }
+    }
 
+    public void refreshAndKeepOpen() {
         MenuElement[] selectionPath = MenuSelectionManager.defaultManager().getSelectedPath();
         MenuSelectionManager.defaultManager().clearSelectedPath();
         MenuSelectionManager.defaultManager().setSelectedPath(selectionPath);
+    }
+
+    public void refreshAndClose() {
+        MenuSelectionManager.defaultManager().clearSelectedPath();
     }
 }
