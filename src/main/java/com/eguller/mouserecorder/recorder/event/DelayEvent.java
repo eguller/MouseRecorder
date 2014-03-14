@@ -30,7 +30,7 @@ public class DelayEvent implements Event {
             try {
                 Thread.sleep(speedDelay);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                //ignore
             }
         }
     }

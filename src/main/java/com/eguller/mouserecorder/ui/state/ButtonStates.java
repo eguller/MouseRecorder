@@ -1,5 +1,6 @@
 package com.eguller.mouserecorder.ui.state;
 
+import com.eguller.mouserecorder.player.StopHotKeyListener;
 import com.eguller.mouserecorder.ui.MainWindow;
 
 /**
@@ -33,7 +34,7 @@ public enum ButtonStates implements Apply {
             mainWindow.getStopButton().setEnabled(false);
             mainWindow.getRecordButton().setEnabled(true);
             mainWindow.getPlayButton().setEnabled(true);
-            mainWindow.getStatusBar().setText("Click blue button to play.");
+            mainWindow.getStatusBar().setText(String.format("Click blue button to play. %s to stop.", StopHotKeyListener.STOP_HOTKEY.toUpperCase()));
         }
     },
     POSTPLAY{

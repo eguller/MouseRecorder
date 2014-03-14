@@ -11,7 +11,7 @@ import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
@@ -24,18 +24,28 @@ import java.util.concurrent.Executors;
 public class PlayerImpl extends Observable implements Runnable, Player {
     Robot robot;
     Record record;
-    Executor executor = Executors.newSingleThreadExecutor();
+    ExecutorService executor = null;
     Config config = null;
     List<LoopEventListener> loopEventListenerList = new LinkedList<LoopEventListener>();
+    StopHotKeyListener stopHotKeyListener;
 
     public PlayerImpl(Config config) throws AWTException {
         this.config = config;
         this.robot = new Robot();
+        stopHotKeyListener = new StopHotKeyListener(this);
     }
 
     public void play(Record record) {
         this.record = record;
+        stopHotKeyListener.register();
+        executor = Executors.newSingleThreadExecutor();
         executor.execute(this);
+    }
+
+    @Override
+    public void stop() {
+        stopHotKeyListener.deregister();
+        executor.shutdownNow();
     }
 
     @Override
@@ -52,10 +62,13 @@ public class PlayerImpl extends Observable implements Runnable, Player {
 
     @Override
     public void run() {
-        for (int i = 0; i < config.getLoopCount() || config.isInfiniteLoop(); i++) {
+        for (int i = 0; (i < config.getLoopCount() || config.isInfiniteLoop()) && !executor.isShutdown(); i++) {
             notifyLoopStarted(new LoopStartedEvent(config.isInfiniteLoop(), i, config.getLoopCount()));
             for (Event event : record.getEventList()) {
                 event.execute(robot);
+                if (executor.isShutdown()) {
+                    break;
+                }
             }
         }
         setChanged();

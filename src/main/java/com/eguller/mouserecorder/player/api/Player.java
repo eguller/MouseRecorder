@@ -13,4 +13,6 @@ public interface Player extends LoopEventSource {
     public void play(Record record);
     public void addObserver(Observer observer);
 
+    public void stop();
+
 }
