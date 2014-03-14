@@ -219,7 +219,7 @@ public class MainWindow extends JFrame implements Observer, LoopEventListener {
     public void loopStarted(LoopStartedEvent loopStartedEvent) {
         String message = "";
         if (loopStartedEvent.isInfiniteLoop()) {
-            message = String.format("Loop %d of \\u221E", loopStartedEvent.getCurrentLoop() + 1);
+            message = String.format("Loop %d of \u221E", loopStartedEvent.getCurrentLoop() + 1);
         } else {
             message = String.format("Loop %d of %d", loopStartedEvent.getCurrentLoop() + 1, loopStartedEvent.getTotalLoop());
         }
