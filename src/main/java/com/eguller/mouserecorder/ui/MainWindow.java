@@ -16,6 +16,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
@@ -25,7 +27,7 @@ import java.util.Observer;
  * Date: 11/24/13
  * Time: 3:28 PM
  */
-public class MainWindow extends JFrame implements Observer, LoopEventListener {
+public class MainWindow extends JFrame implements Observer, LoopEventListener, KeyListener {
     JMenuBar menuBar;
     JButton playButton;
     JButton recordButton;
@@ -224,6 +226,21 @@ public class MainWindow extends JFrame implements Observer, LoopEventListener {
             message = String.format("Loop %d of %d", loopStartedEvent.getCurrentLoop() + 1, loopStartedEvent.getTotalLoop());
         }
         getStatusBar().setText(message);
+    }
+
+    @Override
+    public void keyTyped(KeyEvent keyEvent) {
+        System.out.println(keyEvent.getKeyCode());
+    }
+
+    @Override
+    public void keyPressed(KeyEvent keyEvent) {
+        System.out.println(keyEvent.getKeyCode());
+    }
+
+    @Override
+    public void keyReleased(KeyEvent keyEvent) {
+        System.out.println(keyEvent.getKeyCode());
     }
 
     /**

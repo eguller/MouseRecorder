@@ -6,6 +6,8 @@ import com.eguller.mouserecorder.format.api.Convertor;
 import com.eguller.mouserecorder.format.api.Format;
 import com.eguller.mouserecorder.recorder.Record;
 import com.eguller.mouserecorder.recorder.event.*;
+import com.eguller.mouserecorder.wrappers.KeyWrapper;
+import com.eguller.mouserecorder.wrappers.MouseWrapper;
 
 import java.io.*;
 import java.util.HashMap;
@@ -27,16 +29,16 @@ public class DefaultFormat implements Format {
     private static final Pattern DELAY_PATTERN = Pattern.compile(DELAY_PATTERN_STR);
 
     private static final String KEY_PRESSED_PATTERN_STR = "\\s*\\{\\s*(?!(?:lmouse|rmouse|wheel))([a-zA-Z0-9]+)\\s+pressed\\s*}\\s*";
-    private static final Pattern KEY_PRESSED_PATTERN  = Pattern.compile(KEY_PRESSED_PATTERN_STR);
+    private static final Pattern KEY_PRESSED_PATTERN = Pattern.compile(KEY_PRESSED_PATTERN_STR);
 
     private static final String KEY_RELEASED_PATTERN_STR = "\\s*\\{\\s*(?!(?:lmouse|rmouse|wheel))([a-zA-Z0-9]+)\\s+released\\s*}\\s*";
-    private static final Pattern KEY_RELEASED_PATTERN  = Pattern.compile(KEY_RELEASED_PATTERN_STR);
+    private static final Pattern KEY_RELEASED_PATTERN = Pattern.compile(KEY_RELEASED_PATTERN_STR);
 
     private static final String MOUSE_PRESSED_PATTERN_STR = "\\s*\\{\\s*(lmouse|rmouse|wheel)\\s+pressed\\s*}\\s*";
-    private static final Pattern MOUSE_PRESSED_PATTERN =Pattern.compile(MOUSE_PRESSED_PATTERN_STR);
+    private static final Pattern MOUSE_PRESSED_PATTERN = Pattern.compile(MOUSE_PRESSED_PATTERN_STR);
 
     private static final String MOUSE_RELEASED_PATTERN_STR = "\\s*\\{\\s*(lmouse|rmouse|wheel)\\s+released\\s*}\\s*";
-    private static final Pattern MOUSE_RELEASED_PATTERN =Pattern.compile(MOUSE_RELEASED_PATTERN_STR);
+    private static final Pattern MOUSE_RELEASED_PATTERN = Pattern.compile(MOUSE_RELEASED_PATTERN_STR);
 
 
     private static final String MOUSE_MOVE_PATTERN_STR = "\\s*\\{\\s*move\\s+\\(\\s*(\\d+)\\s*,\\s*(\\d+)\\s*\\)\\s*\\}\\s*";
@@ -146,7 +148,7 @@ public class DefaultFormat implements Format {
         @Override
         public Event string2Event(String str) {
             Matcher matcher = DELAY_PATTERN.matcher(str);
-            if(matcher.find()){
+            if (matcher.find()) {
                 String delayStr = matcher.group(1);
                 return new DelayEvent(Long.parseLong(delayStr), config);
             }
@@ -163,7 +165,7 @@ public class DefaultFormat implements Format {
         @Override
         public Event string2Event(String str) {
             Matcher matcher = KEY_PRESSED_PATTERN.matcher(str);
-            if(matcher.find()){
+            if (matcher.find()) {
                 String key = matcher.group(1);
                 return new KeyPressedEvent(KeyWrapper.keyToCode(key));
             }
@@ -180,7 +182,7 @@ public class DefaultFormat implements Format {
         @Override
         public Event string2Event(String str) {
             Matcher matcher = KEY_RELEASED_PATTERN.matcher(str);
-            if(matcher.find()){
+            if (matcher.find()) {
                 String key = matcher.group(1);
                 return new KeyReleasedEvent(KeyWrapper.keyToCode(key));
             }
@@ -198,7 +200,7 @@ public class DefaultFormat implements Format {
         @Override
         public Event string2Event(String str) {
             Matcher matcher = MOUSE_PRESSED_PATTERN.matcher(str);
-            if(matcher.find()){
+            if (matcher.find()) {
                 String key = matcher.group(1);
                 return new MousePressedEvent(MouseWrapper.keyToCode(key));
             }
@@ -218,7 +220,7 @@ public class DefaultFormat implements Format {
         @Override
         public Event string2Event(String str) {
             Matcher matcher = MOUSE_RELEASED_PATTERN.matcher(str);
-            if(matcher.find()){
+            if (matcher.find()) {
                 String key = matcher.group(1);
                 return new MouseReleasedEvent(MouseWrapper.keyToCode(key));
             }

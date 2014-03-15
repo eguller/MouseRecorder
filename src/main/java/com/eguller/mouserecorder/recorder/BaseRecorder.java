@@ -1,9 +1,9 @@
 package com.eguller.mouserecorder.recorder;
 
 import com.eguller.mouserecorder.config.Config;
-import com.eguller.mouserecorder.format.def.MouseWrapper;
 import com.eguller.mouserecorder.recorder.api.Recorder;
 import com.eguller.mouserecorder.recorder.event.*;
+import com.eguller.mouserecorder.wrappers.MouseWrapper;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyEvent;
@@ -60,7 +60,6 @@ public class BaseRecorder implements NativeMouseMotionListener, NativeKeyListene
             System.err.println(ex.getMessage());
         }
 
-        //Construct the example object and initialze native hook.
         GlobalScreen.getInstance().addNativeKeyListener(this);
         GlobalScreen.getInstance().addNativeMouseListener(this);
         GlobalScreen.getInstance().addNativeMouseMotionListener(this);
@@ -82,8 +81,8 @@ public class BaseRecorder implements NativeMouseMotionListener, NativeKeyListene
 
     @Override
     public void nativeKeyPressed(NativeKeyEvent nativeKeyEvent) {
+        System.out.println("key code: " + nativeKeyEvent.getKeyCode());
         record.post(new KeyPressedEvent(nativeKeyEvent.getKeyCode()));
-        System.out.println("Key pressed: " + nativeKeyEvent.getKeyCode());
     }
 
     @Override
@@ -93,38 +92,24 @@ public class BaseRecorder implements NativeMouseMotionListener, NativeKeyListene
 
     @Override
     public void nativeKeyTyped(NativeKeyEvent nativeKeyEvent) {
-        //inputEventList.add(nativeKeyEvent);
-        //System.out.println("key typed");
     }
 
     @Override
     public void nativeMouseMoved(NativeMouseEvent nativeMouseEvent) {
         record.post(new MouseMoveEvent(nativeMouseEvent.getX(), nativeMouseEvent.getY()));
-        //System.out.println("Mouse Moved - button: " + nativeMouseEvent.getButton() + " modifier: " + nativeMouseEvent.getModifiers());
     }
 
     @Override
     public void nativeMouseDragged(NativeMouseEvent nativeMouseEvent) {
-        //System.err.println("Unhandled event: " + nativeMouseEvent);
-        System.out.println("Mouse Dragged - button: " + nativeMouseEvent.getButton() + " modifier: " + nativeMouseEvent.getModifiers());
-        //inputEventList.add(new MousePressedEvent(nativeMouseEvent.getButton()));
         record.post(new MouseMoveEvent(nativeMouseEvent.getX(), nativeMouseEvent.getY()));
     }
 
     @Override
     public void nativeMouseClicked(NativeMouseEvent nativeMouseEvent) {
-        //System.err.println("Unhandled event: " + nativeMouseEvent);
-        System.out.println("Mouse Clicked - button: " + nativeMouseEvent.getButton() + " modifier: " + nativeMouseEvent.getModifiers());
-        //System.out.println("mask: " + MouseEvent.BUTTON1_DOWN_MASK);
-        //inputEventList.add(new MousePressedEvent(nativeMouseEvent.getButton()));
-        //record.post(new MousePressedEvent(nativeMouseEvent.getButton()));
-
     }
 
     @Override
     public void nativeMousePressed(NativeMouseEvent nativeMouseEvent) {
-        //inputEventList.add(nativeMouseEvent);
-        System.out.println("Mouse Pressed - button: " + nativeMouseEvent.getButton() + " modifier: " + nativeMouseEvent.getModifiers());
         int maskCode = MouseWrapper.native2Code(nativeMouseEvent.getButton());
         record.post(new MousePressedEvent(maskCode));
     }
@@ -133,12 +118,10 @@ public class BaseRecorder implements NativeMouseMotionListener, NativeKeyListene
     public void nativeMouseReleased(NativeMouseEvent nativeMouseEvent) {
         int maskCode = MouseWrapper.native2Code(nativeMouseEvent.getButton());
         record.post(new MouseReleasedEvent(maskCode));
-        System.out.println("Mouse Released - button: " + nativeMouseEvent.getButton() + " modifier: " + nativeMouseEvent.getModifiers());
     }
 
     @Override
     public void nativeMouseWheelMoved(NativeMouseWheelEvent nativeMouseWheelEvent) {
-        System.out.println("Mouse Wheel moved - button: " + nativeMouseWheelEvent.getButton() + " modifier: " + nativeMouseWheelEvent.getModifiers() + " other: " + nativeMouseWheelEvent.getWheelRotation());
         record.post(new MouseWheelEvent(nativeMouseWheelEvent.getWheelRotation()));
     }
 }

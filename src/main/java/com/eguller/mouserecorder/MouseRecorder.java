@@ -20,7 +20,7 @@ import java.awt.*;
 public class MouseRecorder {
 
     public static void main(String[] args) {
-
+        System.out.println(8 >> 1);
         setLookAndFeel();
         SwingUtilities.invokeLater(new Runnable() {
             @Override

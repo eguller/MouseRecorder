@@ -4,9 +4,9 @@ import com.eguller.mouserecorder.config.Config;
 import com.eguller.mouserecorder.config.VolatileConfig;
 import com.eguller.mouserecorder.format.api.Convertor;
 import com.eguller.mouserecorder.format.def.DefaultFormat;
-import com.eguller.mouserecorder.format.def.KeyWrapper;
-import com.eguller.mouserecorder.format.def.MouseWrapper;
 import com.eguller.mouserecorder.recorder.event.*;
+import com.eguller.mouserecorder.wrappers.KeyWrapper;
+import com.eguller.mouserecorder.wrappers.MouseWrapper;
 import org.junit.Test;
 
 import java.awt.event.KeyEvent;
