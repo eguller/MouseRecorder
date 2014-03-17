@@ -48,8 +48,8 @@ public class MainWindow extends JFrame implements Observer, LoopEventListener, K
     SpeedMenuItem speedMenuItem;
 
     JMenu aboutMenu;
-    JMenuItem aboutItem;
-    JMenuItem helpItem;
+    JMenuItem aboutMenuItem;
+    JMenuItem helpMenuItem;
 
     JLabel statusBar;
 
@@ -103,8 +103,11 @@ public class MainWindow extends JFrame implements Observer, LoopEventListener, K
         fileMenu.add(exitItem);
 
         aboutMenu = new JMenu("About");
-        aboutItem = new JMenuItem("About");
-        helpItem = new JMenuItem("Help");
+        aboutMenuItem = new JMenuItem("About");
+        helpMenuItem = new JMenuItem("Help");
+
+        aboutMenu.add(aboutMenuItem);
+        aboutMenu.add(helpMenuItem);
 
         optionMenu = new JMenu("Options");
         minimizeOnRecordItem = new JCheckBoxMenuItem("Minimize on record");
@@ -147,7 +150,7 @@ public class MainWindow extends JFrame implements Observer, LoopEventListener, K
         container.add(statusBar, BorderLayout.PAGE_END);
         setResizable(false);
 
-        setTitle("Mouse BaseRecorder");
+        setTitle("Mouse Recorder");
 
 
         addActionListeners();
@@ -177,6 +180,7 @@ public class MainWindow extends JFrame implements Observer, LoopEventListener, K
         minimizeOnRecordItem.addActionListener(new MinimizeOnRecordAction(config));
         minimizeOnPlayItem.addActionListener(new MinimizeOnPlayAction(config));
         infiniteLoopMenuItem.addActionListener(new InfiniteLoopAction(config, loopCountMenuItem));
+        helpMenuItem.addActionListener(new OpenHelp());
     }
 
     public void loadConfig() {
