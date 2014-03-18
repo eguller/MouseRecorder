@@ -47,7 +47,7 @@ public class AboutAction implements ActionListener {
         Class clazz = AboutAction.class;
         String className = clazz.getSimpleName() + ".class";
         String classPath = clazz.getResource(className).toString();
-        if (!classPath.startsWith("jar") || !classPath.startsWith("exe")) {
+        if (!classPath.startsWith("jar")) {
             // Class not from JAR
             return version;
         }
