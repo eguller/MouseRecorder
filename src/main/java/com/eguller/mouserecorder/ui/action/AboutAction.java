@@ -20,7 +20,7 @@ import java.util.jar.Manifest;
  * Time: 6:55 AM
  */
 public class AboutAction implements ActionListener {
-    private static final String resource = "com/eguller/mouserecorder/about/html/about.html";
+    private static final String resource = "com/eguller/mouserecorder/about/html/html/about.html";
     Component parent;
     String message;
     Icon icon;
