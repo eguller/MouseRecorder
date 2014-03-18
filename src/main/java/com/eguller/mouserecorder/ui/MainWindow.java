@@ -181,6 +181,7 @@ public class MainWindow extends JFrame implements Observer, LoopEventListener, K
         minimizeOnPlayItem.addActionListener(new MinimizeOnPlayAction(config));
         infiniteLoopMenuItem.addActionListener(new InfiniteLoopAction(config, loopCountMenuItem));
         helpMenuItem.addActionListener(new OpenHelp());
+        aboutMenuItem.addActionListener(new AboutAction(this));
     }
 
     public void loadConfig() {

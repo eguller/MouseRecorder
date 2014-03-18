@@ -1,9 +1,9 @@
 package com.eguller.mouserecorder.ui.action;
 
-import java.awt.*;
+import com.eguller.mouserecorder.ui.util.UrlOpener;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URL;
 
 /**
  * User: eguller
@@ -15,13 +15,6 @@ public class OpenHelp implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-        if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-            try {
-                desktop.browse(new URL(helpUrl).toURI());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        UrlOpener.open(helpUrl);
     }
 }
