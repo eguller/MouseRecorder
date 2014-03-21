@@ -8,9 +8,9 @@ Java 6 or above is required to run Mouse Recorder. If you do not have a Java ins
 <a href="www.java.com/download/">www.java.com/download/</a>
 Download
 --------
-Windows - https://github.com/eguller/MouseRecorder/releases/download/v1.0.0/Mouse.Recorder.exe
-MacOSX - https://github.com/eguller/MouseRecorder/releases/download/v1.0.0/Mouse.Recorder.dmg
-Other - https://github.com/eguller/MouseRecorder/releases/download/v1.0.0/mouserecorder.jar and run
+Windows - <a href="https://github.com/eguller/MouseRecorder/releases/download/v1.0.0/Mouse.Recorder.exe">Mouse.Recorder.exe</a>
+MacOSX - <a href="https://github.com/eguller/MouseRecorder/releases/download/v1.0.0/Mouse.Recorder.dmg">Mouse.Recorder.dmg</a>
+Other - <a href="https://github.com/eguller/MouseRecorder/releases/download/v1.0.0/mouserecorder.jar">mouserecorder.jar</a> and run
 ```
 java -jar mouserecorder.jar
 ````
