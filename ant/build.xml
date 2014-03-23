@@ -1,41 +1,29 @@
 <project name="mouse-recorder" default="default" basedir="../">
     <property name="target" value="target"/>
-    <property name="executable.win" value="${target}/Mouse Recorder.exe"/>
-    <property name="executable.mac" value="${target}/Mouse Recorder.app"/>
+    <property name="executable.win" value="${target}/MouseRecorder.exe"/>
+    <property name="executable.mac" value="${target}/MouseRecorder.app"/>
     <property name="executable.jar" value="${target}/mouserecorder.jar"/>
     <property name="main.class" value="com.eguller.mouserecorder.MouseRecorder"/>
-    <target name="default" depends="clean, build, mac, win">
+    <target name="default" depends="clean, build, mac">
 
     </target>
     <target name="os">
-        <condition property="windowsos">
-            <os family="windows"/>
-        </condition>
-
-        <condition property="linuxos">
-            <os family="unix"/>
-        </condition>
         <condition property="macos">
             <os family="mac"/>
         </condition>
     </target>
-    <target name="win" if="windowsos" depends="os">
-        <echo message="windows">windows os</echo>
-    </target>
     <target name="mac" if="macos" depends="os">
-        <echo message="mac">mac os</echo>
         <mkdir dir="${executable.mac}" />
         <mkdir dir="${executable.mac}/Contents" />
         <mkdir dir="${executable.mac}/Contents/MacOS" />
         <mkdir dir="${executable.mac}/Contents/Resources" />
         <mkdir dir="${executable.mac}/Contents/Resources/Java" />
-
         <copy file="${target}/classes/mouse-recorder.icns" todir="${executable.mac}/Contents/Resources/" />
         <copy file="${executable.jar}" todir="${executable.mac}/Contents/Resources/Java" />
-        <copy file="mac-resources/JavaApplicationStub" todir="${executable.mac}/Contents/MacOS/" />
+        <copy file="mac-resources/universalApplicationStub" todir="${executable.mac}/Contents/MacOS/"/>
         <exec executable="chmod">
             <arg value="+x"/>
-            <arg value="${executable.mac}/Contents/MacOS/JavaApplicationStub"/>
+            <arg value="${executable.mac}/Contents/MacOS/universalApplicationStub"/>
         </exec>
         <copy file="mac-resources/Info.plist" todir="${executable.mac}/Contents/" />
         <copy file="mac-resources/PkgInfo" todir="${executable.mac}/Contents/" />
