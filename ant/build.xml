@@ -1,10 +1,11 @@
 <project name="mouse-recorder" default="default" basedir="../">
     <property name="target" value="target"/>
-    <property name="executable.win" value="${target}/MouseRecorder.exe"/>
-    <property name="executable.mac" value="${target}/MouseRecorder.app"/>
-    <property name="executable.jar" value="${target}/mouserecorder.jar"/>
+    <property name="app.name" value="MouseRecorder"/>
+    <property name="executable.win" value="${target}/${app.name}.exe"/>
+    <property name="executable.mac" value="${target}/${app.name}.app"/>
+    <property name="executable.jar" value="${target}/${app.name}.jar"/>
     <property name="main.class" value="com.eguller.mouserecorder.MouseRecorder"/>
-    <target name="default" depends="clean, build, mac">
+    <target name="default" depends="clean, build, mac, dmg">
 
     </target>
     <target name="os">
@@ -33,6 +34,21 @@
         <delete file="${executable.win}"></delete>
         <delete file="${executable.mac}"></delete>
         <delete file="${executable.jar}"></delete>
+    </target>
+
+    <target name="dmg">
+        <exec executable="/usr/bin/hdiutil" os="Mac OS X" failonerror="true">
+            <arg value="create"/>
+            <arg value="-srcfolder"/>
+            <arg value="${executable.mac}"/>
+            <arg value="-volname"/>
+            <arg value="${app.name}"/>
+            <arg value="-ov"/>
+            <arg value="target/${app.name}.dmg"/>
+            <arg value="-format"/>
+            <arg value="UDRW"/>
+        </exec>
+
     </target>
 
     <target name="build">
