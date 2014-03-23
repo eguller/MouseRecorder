@@ -46,7 +46,7 @@
             <arg value="-ov"/>
             <arg value="target/${app.name}.dmg"/>
             <arg value="-format"/>
-            <arg value="UDRW"/>
+            <arg value="UDZO"/>
         </exec>
 
     </target>

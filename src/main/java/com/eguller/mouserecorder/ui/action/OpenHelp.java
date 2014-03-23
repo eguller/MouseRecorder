@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
  * Time: 12:59 AM
  */
 public class OpenHelp implements ActionListener {
-    private static String helpUrl = "https://github.com/eguller/MouseRecorder#mouserecorder";
+    private static String helpUrl = "https://github.com/eguller/MouseRecorder#mouse-recorder";
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
