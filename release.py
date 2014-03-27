@@ -12,7 +12,7 @@ class Release:
     def __init__(self, username, password):
         self.username = username
         self.password = password
-        self.default_branch = "deploy_script"
+        self.default_branch = "master"
         self.release_prefix = "v"
         self.projectName = "MouseRecorder"
         self.tagName = self.tagName()
